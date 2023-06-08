@@ -1,0 +1,40 @@
+<nav class="navbar navbar-expand-lg " style="background-color: #236f2d;">
+
+  <div *ngIf="authService.esAdmin" class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <i class="fa fa-users" aria-hidden="true" style="color: rgba(255, 255, 255, 0.519);"></i>
+        <a class="nav-link" routerLink="/adm-usuarios" style="font-size: 18px;padding: 0;">Usuarios</a>
+      </li>
+    </ul>
+  </div>
+
+  
+  <span *ngIf="authService.sePudo" class="navbar-text ml-auto text-right" style="font-size: 18px;padding: 0;font-weight: bolder;margin-left: 50px; margin:0;text-transform: uppercase;margin-right: 1%;">
+    <img src="{{authService.fotoLogueado}}" alt="" style="width: 30px;height: 30px;margin-right: 2%;margin: 0;padding: 0;"> {{ authService.nombreLogueado}}
+  </span>
+  <br>
+  <button *ngIf="authService.sePudo" style="height: 30px; width: 100px; padding: 0;margin-right: 1%;" (click)="cerrarSesion()" class="btn btn-outline-success" type="submit">Cerrar sesión</button>
+  <span class="navbar-text ml-auto text-right" style="font-size: 18px;padding: 0;font-weight: bolder;">
+    {{ fechaHora | date: 'dd/MM/yyyy HH:mm:ss' }}
+  </span>
+</nav>
+
+
+<!--NAVBAR SIDE-->
+<div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed':''">
+  <div class="logo-container">
+    <button class="logo" (click)="toggleCollapse()"> <img src="favicon.ico" style="height: 50px;width: 50px;"></button>
+    <div class="logo-text" *ngIf="collapsed">Clínica Online</div>
+    <button class="btn-close" *ngIf="collapsed" (click)="closeSidenav()"><i
+        class="fal fa-times close-icon"></i></button>
+  </div>
+  <ul class="sidenav-nav">
+    <li class="sidenav-nav-item" *ngFor="let data of navData">
+      <a href="" class="sidenav-nav-link" [routerLink]="[data.routeLink]">
+        <i class="sidenav-link-icon" [class]="data.icon"></i>
+        <span class="sidenav-link-text" *ngIf="collapsed">{{data.label}}</span>
+      </a>
+    </li>
+  </ul>
+</div>

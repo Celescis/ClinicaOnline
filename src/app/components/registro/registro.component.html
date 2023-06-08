@@ -1,0 +1,135 @@
+<body>
+    <div class="main">
+        <input *ngIf="!dondeEsta" type="checkbox" id="chk" [(ngModel)]="registro"
+        (ngModelChange)="handleChangeCheckbox($event)" aria-hidden="true">
+ 
+
+        <div class="signup">
+            <form *ngIf="!login" [formGroup]="form" (ngSubmit)="guardar()" class="needs-validation" novalidate>
+                <label for="chk" aria-hidden="true">Registrarse</label>
+
+                <div class="d-flex flex-wrap">
+                    <div class="flex-column" style="flex: 2;">
+                        <div>
+                            <input (input)="validarName()"
+                                [ngClass]="{'is-invalid': !nameValido, 'is-valid': nameValido}" style="width: 80%;"
+                                type="text" name="txt" placeholder="Nombre" required class="form-control text-success"
+                                formControlName="nom">
+                            <div class="invalid-feedback" style="color: rgb(226, 53, 53); margin-left: 11%; top:0;"
+                                *ngIf="form.controls['nom'].value?.length > 0">
+                                Ingrese su nombre
+                        </div>
+                            <input (input)="validarApellido()"
+                                [ngClass]="{'is-invalid': !apellidoValido, 'is-valid': apellidoValido}"
+                                style="width: 80%;" type="text" name="txt" placeholder="Apellido" required
+                                class="form-control text-success" formControlName="ap">
+                            <small class="invalid-feedback" style="color: rgb(226, 53, 53); margin-left: 11%; top:0;"
+                                *ngIf="form.controls['ap'].value?.length > 0">
+                                Ingrese su apellido
+                            </small>
+                        </div>
+                    </div>
+
+                    <div class="flex-column" style="flex: 2;">
+                        <div>
+                            <input (input)="validarEdad()"
+                                [ngClass]="{'is-invalid': !edadValidada, 'is-valid': edadValidada}" style="width: 80%;"
+                                type="number" name="nmb" placeholder="Edad" required class="form-control text-success"
+                                formControlName="ed">
+                            <small class="invalid-feedback" style="color: rgb(226, 53, 53); margin-left: 11%; top:0;"
+                                *ngIf="form.controls['ed'].value?.length > 0">
+                                Ingrese su edad
+                            </small>
+                            <input (input)="validarDni()" [ngClass]="{'is-invalid': !dniValido, 'is-valid': dniValido}"
+                                style="width: 80%;" type="number" name="nmb" placeholder="DNI" required
+                                class="form-control text-success" formControlName="dni">
+                            <small class="invalid-feedback" style="color: rgb(226, 53, 53); margin-left: 11%; top:0;"
+                                *ngIf="form.controls['dni'].value?.length > 0">
+                                Ingrese su dni
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <input (input)="validarObraSocial()" [ngClass]="{'is-invalid': !obraSocialValidada, 'is-valid': obraSocialValidada}" type="text" name="txt" placeholder="Obra Social" required="" class="form-control text-success"
+                    formControlName="os">
+                <small class="invalid-feedback" style="color: rgb(226, 53, 53); margin-left: 20%; top:0;"
+                    *ngIf="form.controls['os'].errors?.['required'] && form.controls['os'].touched">
+                    Ingrese su obra social
+                </small>
+
+                <div class="d-flex flex-wrap">
+                    <div class="flex-column" style="flex: 1;">
+                        <input (input)="validarCorreo()"
+                            [ngClass]="{'is-invalid': !correoValido, 'is-valid': correoValido}" style="width: 80%;"
+                            type="email" name="email" placeholder="Mail" required class="form-control text-success"
+                            formControlName="mail">
+                        <small class="invalid-feedback" style="color: rgb(226, 53, 53); margin-left: 20%; top:0;"
+                            *ngIf="form.controls['mail'].value?.length > 0">
+                            Ingrese su mail
+                        </small>
+                    </div>
+
+                    <div class="flex-column" style="flex: 1;">
+                        <input (input)="validarPass()" [ngClass]="{'is-invalid': !passValido, 'is-valid': passValido}"
+                            style="width: 80%;" type="password" name="pswd" placeholder="Clave" required
+                            class="form-control text-success" formControlName="pw">
+                        <small class="invalid-feedback" style="color: rgb(226, 53, 53); margin-left: 20%; top:0;"
+                            *ngIf="form.controls['pw'].value?.length > 0">
+                            Ingrese su clave
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Input para seleccionar las imágenes -->
+                <label for="file" style="font-size:20px; margin-bottom: -2%;">INGRESE 2 IMAGENES</label>
+                <input type="file" id="fileInput" name="ft" accept="image/*" multiple
+                    (change)="handleFileInputChange($event)" class="form-control text-success" formControlName="ft" required>
+                <small class="invalid-feedback" style="color: rgb(226, 53, 53); margin-left: 20%; top: 0;"
+                    *ngIf="form.controls['ft'].errors?.['required'] && form.controls['ft'].touched">
+                    Ingrese 2 imágenes
+                </small>
+
+                <!-- Div para mostrar las imágenes seleccionadas -->
+                <div class="images" style="align-items: center;display: flex;justify-content: center;">
+                    <img [src]="image" *ngFor="let image of images" style="width: 100px;height: 100px;">
+                </div>
+
+                <button type="submit">Registrar</button>
+            </form>
+        </div>
+
+        <div *ngIf="(login || !esPaciente) && !dondeEsta" class="login" [ngClass]="{'login2': login, 'login': !login}">
+            <form [formGroup]="formLogin" (ngSubmit)="loguear()" class="needs-validation" novalidate>
+                <label for="chk" aria-hidden="true">Ingresar</label>
+                <div class="d-flex flex-wrap">
+                    <div class="flex-column" style="flex: 1;">
+                        <input (input)="validarCorreo()"
+                            [ngClass]="{'is-invalid': !correoValido, 'is-valid': correoValido}" style="width: 60%;"
+                            type="email" name="email" placeholder="Mail" required class="form-control text-success"
+                            formControlName="mail">
+                        <small class="invalid-feedback" style="color: rgb(226, 53, 53); margin-left: 20%; top:0;"
+                            *ngIf="formLogin.controls['mail'].value?.length > 0">
+                            Ingrese su mail
+                        </small>
+                        <input (input)="validarPass()" [ngClass]="{'is-invalid': !passValido, 'is-valid': passValido}"
+                            style="width: 60%;" type="password" name="pswd" placeholder="Clave" required
+                            class="form-control text-success" formControlName="pw">
+                        <small class="invalid-feedback" style="color: rgb(226, 53, 53); margin-left: 20%; top:0;"
+                            *ngIf="formLogin.controls['pw'].value?.length > 0">
+                            Ingrese su clave
+                        </small>
+                    </div>
+                </div>
+
+                <button type="submit">Aceptar</button>
+            </form>
+        </div>
+    </div>
+    <div *ngIf="registro && (login || !esPaciente)">
+        <app-usuarios (botonClickeadoUsuarios)="clickListadoUsuarios($event)"></app-usuarios>
+    </div>
+    <div *ngIf="spinner" class="spinner-container">
+        <span class="loader"></span>
+    </div>
+</body>

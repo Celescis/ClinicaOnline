@@ -1,0 +1,102 @@
+<div class="main">
+    <button class="btn-habilitar btn-nuevo-usuario" *ngIf="!createrUserMenu" (click)="showCreateUserMenu()">
+        REGISTRAR NUEVO USUARIO
+    </button>
+    <button class="btn-habilitar btn-menu-volver" *ngIf="createrUserMenu" (click)="showUserList()">
+        VOLVER AL LISTADO DE USUARIOS
+    </button>
+    <h3 *ngIf="!createrUserMenu">LISTADO DE USUARIOS</h3>
+    <div class="tabla-usuario" *ngIf="!createrUserMenu">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col" style="color: #000;">PERFIL</th>
+                    <th scope="col" style="color: #000;">NOMBRE</th>
+                    <th scope="col" style="color: #000;">APELLIDO</th>
+                    <th scope="col" style="color: #000;">ACCIÓN</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="tr-tabla" *ngFor="let user of usersList">
+
+                    <td *ngIf="user.hasOwnProperty('especialidad')" style="text-transform: upperCase">
+                        <span>Especialista</span>
+                    </td>
+                    <td *ngIf="user.hasOwnProperty('obraSocial')" style="text-transform: upperCase">
+                        <span>Paciente</span>
+                    </td>
+                    <td *ngIf="!user.hasOwnProperty('obraSocial') && !user.hasOwnProperty('especialidad')"
+                        style="text-transform: upperCase">
+                        <span>Administrador</span>
+                    </td>
+                    <td>
+                        <span>{{ user.nombre }}</span>
+                    </td>
+                    <td>
+                        <span>{{ user.apellido }}</span>
+                    </td>
+                    <td>
+                        <div *ngIf="user.hasOwnProperty('especialidad')">
+                            <button class="btn-habilitar" *ngIf="!user.habilitado" (click)="updateUser(user, 1)">
+                                Habilitar
+                            </button>
+                            <button class="btn-deshabilitar" *ngIf="user.habilitado" (click)="updateUser(user, 2)">
+                                Deshabilitar
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </div>
+    <div *ngIf="spinner" class="spinner-container">
+        <span class="loader"></span>
+    </div>
+</div>
+
+<div class="opcion-registros row" *ngIf="
+      !formPaciente && !formEspecialista && !formAdministrador && createrUserMenu
+    ">
+    <div class="col" (click)="goToFormPaciente()">
+        <div style="box-shadow: 0px 0px 15px #0000008b;">
+            <h2>Paciente</h2>
+            <img src="/assets/usuarios/personas.png" alt="imagen paciente" />
+        </div>
+    </div>
+    <div class="col" (click)="goToFormEspecialista()">
+        <div style="box-shadow: 0px 0px 15px #0000008b;">
+            <h2>Especialista</h2>
+            <img src="/assets/usuarios/medicos.png" alt="imagen especialista" />
+        </div>
+    </div>
+    <div class="col" (click)="goToFormAdministrador()">
+        <div style="box-shadow: 0px 0px 15px #0000008b;">
+            <h2>Administrador</h2>
+            <img src="/assets/usuarios/admin.png" alt="imagen administrador" />
+        </div>
+    </div>
+</div>
+
+<div class="registro-paciente" *ngIf="formPaciente">
+    <button class="btn-volver" (click)="goToRegistro()">
+        VOLVER
+    </button>
+    <app-registro [dondeEsta]="dondeEsta"></app-registro>
+</div>
+<div class="registro-especialista" *ngIf="formEspecialista">
+    <button class="btn-volver2" (click)="goToRegistro()">
+        VOLVER
+    </button>
+    <div style="margin-left: 15%;">
+        <app-registro-especialista [dondeEsta]="dondeEsta"></app-registro-especialista>
+    </div>
+</div>
+<div class="registro-especialista" *ngIf="formAdministrador">
+    <button class="btn-volver" (click)="goToRegistro()">
+        VOLVER
+    </button>
+    <app-registro-especialista [dondeEsta]="dondeEsta" [admin]="true"></app-registro-especialista>
+</div>
+
