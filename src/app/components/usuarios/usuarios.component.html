@@ -1,0 +1,40 @@
+<div class="main">
+    <h3
+    style="font-size: 30px;align-items: center;justify-content: center;display: flex;font-family: 'Poppins', sans-serif; margin-top: 2%; font-weight: 600;">
+    ACCESO RÁPIDO:</h3>
+    <div class="d-flex flex-wrap">
+        <div class="flex-column" style="flex: 3;">
+            <label>PACIENTES</label>
+            <div class="d-flex flex-wrap" style="position:relative;margin-right: -500px;margin-left: 5%;">
+                <div *ngFor="let usuario of listaPacientes" class="user-button">
+                    <button class="user-button-nuevo" (click)="clickListado(usuario)">
+                        <img src="{{ usuario.fotos }}" alt="Imagen de usuario" class="user-image">
+                    </button>
+                    <label class="user-name">{{ usuario.nombre }}</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex-column" style="flex: 3;">
+        <label>ESPECIALISTAS</label>
+        <div class="d-flex flex-wrap" style="position:relative; margin-right: -500px;margin-left: 5%;">
+            <div *ngFor="let usuario of listaEspecialistas" class="user-button">
+                <button class="user-button-nuevo" (click)="clickListado(usuario)">
+                    <img src="{{ usuario.fotos }}" alt="Imagen de usuario" class="user-image">
+                </button>
+                <label class="user-name">{{ usuario.nombre }}</label>
+            </div>
+        </div>
+    </div>
+    <div class="flex-column" style="flex: 3;">
+        <label>ADMINISTRADORES</label>
+        <div class="d-flex flex-wrap" style="position:relative; margin-right: -500px;margin-left: 5%;">
+            <div *ngFor="let usuario of listaAdmin" class="user-button">
+                <button class="user-button-nuevo" (click)="clickListado(usuario)">
+                    <img src="{{ usuario.fotos }}" alt="Imagen de usuario" class="user-image">
+                </button>
+                <label class="user-name">{{ usuario.nombre }}</label>
+            </div>
+        </div>
+    </div>
+</div>

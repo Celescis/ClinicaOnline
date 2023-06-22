@@ -1,0 +1,622 @@
+<body>
+  <div *ngIf="spinner" class="spinner-container">
+    <span class="loader"></span>
+  </div>
+  <div class="main">
+
+  
+  <div class="turnos" *ngIf="isPaciente">
+    <h3>MIS TURNOS</h3>
+    <label
+      style="
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        margin-right: 1rem;
+        font-size: 1.5rem;
+      "
+      >Buscar</label
+    >
+    <input
+      class="input-busqueda"
+      type="text"
+      [(ngModel)]="palabraBusqueda"
+      (keyup)="filtrarPorCamposPaciente()"
+      placeholder="Ingresar busqueda..."
+    />
+
+    <!-- LISTA GENERAL DE TURNOS -->
+    <div class="tabla-usuario text-focus-in">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Fecha</th>
+            <th scope="col">Especialista</th>
+            <th scope="col">Especialidad</th>
+            <!-- <th scope="col">Paciente</th>
+            <th scope="col">Obra Social</th> -->
+            <th scope="col">Estado</th>
+            <th scope="col">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="tr-tabla"
+            style="cursor: pointer"
+            *ngFor="let turn of turnosFiltrados"
+          >
+          <td>{{ (turn.fecha.seconds * 1000) | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+
+            <td>
+              {{ turn.especialista.apellido }} {{ turn.especialista.nombre }}
+            </td>
+            <td>{{ turn.especialidad }}</td>
+            <!-- <td>{{ turn.paciente.apellido }} {{ turn.paciente.nombre }}</td>
+            <td>{{ turn.paciente.obraSocial }}</td> -->
+            <td>
+              <span class="btn btn-success estado" disabled style="margin-left: 1rem; box-shadow: 2px 2px 4px #000">{{ turn.estado }}</span>
+            </td>
+
+            <td>
+              <button
+                class="btn btn-secondary btn-cancelar"
+                style="box-shadow: 2px 2px 4px #000"
+                (click)="cancelarTurno(turn)"
+                *ngIf="
+                  turn.estado != 'aceptado' &&
+                  turn.estado != 'realizado' &&
+                  turn.estado != 'rechazado' &&
+                  turn.estado != 'cancelado'
+                "
+              >
+                Cancelar
+              </button>
+              <button
+                class="btn btn-success btn-confirmar"
+                style="margin-left: 1rem; box-shadow: 2px 2px 4px #000"
+                (click)="confirmarCancelacion(turn)"
+                *ngIf="
+                  cancelacionTurno &&
+                  turnoACancelar.fecha.seconds == turn.fecha.seconds
+                "
+              >
+                Confirmar
+              </button>
+              <br
+                *ngIf="
+                  cancelacionTurno &&
+                  turnoACancelar.fecha.seconds == turn.fecha.seconds
+                "
+              />
+              <input
+                type="text"
+                class="form-control"
+                style="margin-top: 0.5rem"
+                placeholder="Comentario de cancelación..."
+                [(ngModel)]="comentarioCancelacion"
+                *ngIf="
+                  cancelacionTurno &&
+                  turnoACancelar.fecha.seconds == turn.fecha.seconds
+                "
+              />
+              <button
+                class="btn btn-success btn-cancelar"
+                style="box-shadow: 2px 2px 4px #000"
+                (click)="verComentario(turn)"
+                *ngIf="turn.comentarioPaciente"
+              >
+                Ver Reseña
+              </button>
+              <br
+                *ngIf="
+                  vistaComentario &&
+                  turnoACancelar.fecha.seconds == turn.fecha.seconds
+                "
+              />
+              <input
+                disabled=""
+                type="text"
+                class="form-control"
+                style="margin-top: 0.5rem"
+                placeholder="Comentario de cancelación..."
+                [(ngModel)]="turn.comentarioPaciente"
+                *ngIf="
+                  vistaComentario &&
+                  turnoACancelar.fecha.seconds == turn.fecha.seconds
+                "
+              />
+              <button
+                class="btn btn-success btn-confirmar"
+                style="box-shadow: 2px 2px 4px #000;   text-transform: uppercase;"
+                (click)="calificarTurno(turn)"
+                *ngIf="turn.estado == 'realizado' && !turn.comentarioPaciente"
+              >
+                Calificar
+              </button>
+              <button
+                class="btn btn-success btn-confirmar"
+                style="margin-left: 1rem; box-shadow: 2px 2px 4px #000"
+                (click)="confirmarCalificacion(turn)"
+                *ngIf="
+                  vistaComentarioCalificacion &&
+                  turnoACalificar.fecha.seconds == turn.fecha.seconds
+                "
+              >
+                Confirmar
+              </button>
+              <br
+                *ngIf="turn.estado == 'realizado' && !turn.comentarioPaciente"
+              />
+              <input
+                type="text"
+                class="form-control"
+                style="margin-top: 0.5rem"
+                placeholder="Comentario de calificación..."
+                [(ngModel)]="comentarioCalificacion"
+                *ngIf="
+                  vistaComentarioCalificacion &&
+                  turnoACalificar.fecha.seconds == turn.fecha.seconds
+                "
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="turnos" *ngIf="isEspecialista">
+    <h3>MIS TURNOS</h3>
+    <label
+      style="
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        margin-right: 1rem;
+        font-size: 1.5rem;
+      "
+      >Buscar</label
+    >
+    <input
+      class="input-busqueda"
+      type="text"
+      [(ngModel)]="palabraBusqueda"
+      (keyup)="filtrarPorCamposEspecialista()"
+      placeholder="Ingresar busqueda..."
+    />
+
+    <!-- LISTA GENERAL DE TURNOS -->
+    <div
+      class="tabla-usuario text-focus-in"
+    >
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Fecha</th>
+            <th scope="col">Especialidad</th>
+            <th scope="col">Paciente</th>
+            <th scope="col">Estado</th>
+            <th scope="col">Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            class="tr-tabla"
+            style="cursor: pointer"
+            *ngFor="let turn of turnosFiltrados"
+          >
+          <td>{{ (turn.fecha.seconds * 1000) | date: 'dd/MM/yyyy HH:mm:ss' }}</td>
+            <td>{{ turn.especialidad }}</td>
+            <td>{{ turn.paciente.apellido }} {{ turn.paciente.nombre }}</td>
+            <td style="padding-top: 1rem; padding-bottom: 1rem">
+              <span class="estado">{{ turn.estado }}</span>
+            </td>
+
+            <td>
+              <button
+                class="btn btn-secondary btn-cancelar"
+                style="box-shadow: 2px 2px 4px #000; margin-right: 1rem"
+                (click)="cancelarTurnoEspecialista(turn)"
+                *ngIf="
+                  turn.estado != 'aceptado' &&
+                  turn.estado != 'realizado' &&
+                  turn.estado != 'rechazado' &&
+                  turn.estado != 'cancelado' &&
+                  botonCancelar
+                "
+              >
+                Cancelar
+              </button>
+              <button
+                class="btn btn-danger btn-cancelar"
+                style="box-shadow: 2px 2px 4px #000; margin-right: 1rem"
+                (click)="rechazarTurno(turn)"
+                *ngIf="
+                  turn.estado != 'aceptado' &&
+                  turn.estado != 'realizado' &&
+                  turn.estado != 'rechazado' &&
+                  turn.estado != 'cancelado' &&
+                  botonRechazar
+                "
+              >
+                Rechazar
+              </button>
+              <button
+                class="btn btn-success btn-confirmar"
+                style="margin-right: 1rem; box-shadow: 2px 2px 4px #000"
+                (click)="confirmarCancelacionRechazoEspecialista(turn)"
+                *ngIf="
+                  cancelacionTurno &&
+                  turnoACancelar.fecha.seconds == turn.fecha.seconds &&
+                  confirmacionRechazo
+                "
+              >
+                Confirmar
+              </button>
+              <button
+                class="btn btn-success btn-confirmar"
+                style="margin-right: 1rem; box-shadow: 2px 2px 4px #000"
+                (click)="confirmarCancelacion(turn)"
+                *ngIf="
+                  cancelacionTurno &&
+                  turnoACancelar.fecha.seconds == turn.fecha.seconds &&
+                  !confirmacionRechazo
+                "
+              >
+                Confirmar
+              </button>
+              <button
+                class="btn btn-success btn-cancelar"
+                style="box-shadow: 2px 2px 4px #000"
+                (click)="aceptarTurno(turn)"
+                *ngIf="
+                  turn.estado != 'aceptado' &&
+                  turn.estado != 'realizado' &&
+                  turn.estado != 'rechazado' &&
+                  turn.estado != 'cancelado' &&
+                  !cancelacionTurno
+                "
+              >
+                Aceptar
+              </button>
+              <button
+                class="btn btn-warning btn-cancelar"
+                style="box-shadow: 2px 2px 4px #000"
+                (click)="finalizarTurno(turn)"
+                *ngIf="turn.estado == 'aceptado'"
+              >
+                Finalizar
+              </button>
+              <button
+                class="btn btn-success btn-confirmar"
+                style="margin-left: 1rem; box-shadow: 2px 2px 4px #000"
+                (click)="confirmarFinalizacion(turn)"
+                *ngIf="
+                  confirmacionFinalizacion &&
+                  turnoAFinalizar.fecha.seconds == turn.fecha.seconds
+                "
+              >
+                Confirmar
+              </button>
+              <br
+                *ngIf="
+                  confirmacionFinalizacion &&
+                  turnoAFinalizar.fecha.seconds == turn.fecha.seconds
+                "
+              />
+              <input
+                type="text"
+                class="form-control"
+                style="margin-top: 0.5rem"
+                placeholder="Comentario de finalización"
+                [(ngModel)]="comentarioFinalizacion"
+                *ngIf="
+                  confirmacionFinalizacion &&
+                  turnoAFinalizar.fecha.seconds == turn.fecha.seconds
+                "
+              />
+              <br
+                *ngIf="
+                  cancelacionTurno &&
+                  turnoACancelar.fecha.seconds == turn.fecha.seconds
+                "
+              />
+              <input
+                type="text"
+                class="form-control"
+                style="margin-top: 0.5rem"
+                [placeholder]="
+                  botonCancelar
+                    ? 'Comentario de cancelación'
+                    : 'Comentario de rechazo'
+                "
+                [(ngModel)]="comentarioCancelacion"
+                *ngIf="
+                  cancelacionTurno &&
+                  turnoACancelar.fecha.seconds == turn.fecha.seconds
+                "
+              />
+              <button
+                class="btn btn-secondary btn-cancelar"
+                style="box-shadow: 2px 2px 4px #000; margin-right: 1rem"
+                (click)="verComentario(turn)"
+                *ngIf="turn.comentarioPaciente"
+              >
+                Ver Reseña
+              </button>
+              <!-- <button
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+                class="btn btn-info btn-light"
+                style="box-shadow: 2px 2px 4px #000"
+                (click)="abrirFormHistorialClinico(turn)"
+                *ngIf="turn.estado == 'realizado' && !turn?.historial"
+              >
+                Cargar Historia Clínica
+              </button> -->
+              <br
+                *ngIf="
+                  vistaComentario &&
+                  turnoACancelar.fecha.seconds == turn.fecha.seconds
+                "
+              />
+              <input
+                disabled=""
+                type="text"
+                class="form-control"
+                style="margin-top: 0.5rem"
+                placeholder="Comentario de cancelación..."
+                [(ngModel)]="turn.comentarioPaciente"
+                *ngIf="
+                  vistaComentario &&
+                  turnoACancelar.fecha.seconds == turn.fecha.seconds
+                "
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
+
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">
+          ALTA DE HISTORIAL CLÍNICO
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div>
+          <p>
+            <span style="font-weight: bolder">Especialista:</span>
+            {{ turnoFinalizado?.especialista?.apellido }},
+            {{ turnoFinalizado?.especialista?.nombre }}
+          </p>
+          <p>
+            <span style="font-weight: bolder">Paciente:</span>
+            {{ turnoFinalizado?.paciente?.apellido }},
+            {{ turnoFinalizado?.paciente?.nombre }}
+          </p>
+          <p>
+            <span style="font-weight: bolder">Especialidad:</span>
+            {{ turnoFinalizado?.especialidad }}
+          </p>
+        </div>
+        <form [formGroup]="formHistorial" class="contenedor-form text-focus-in">
+          <h2 style="text-align: center">HISTORIAL CLÍNICO</h2>
+
+          <!-- INPUT ALTURA -->
+          <div class="col-sm mb-3">
+            <label for="altura" class="form-label">Altura</label>
+            <input
+              formControlName="altura"
+              type="number"
+              class="form-control"
+              placeholder="Altura"
+              min="1"
+              max="2.5"
+            />
+            <small
+              class="mensaje-error"
+              *ngIf="
+                formHistorial.controls['altura'].errors?.['required'] &&
+        formHistorial.controls['altura'].touched
+                          "
+            >
+              La Altura es requerida
+            </small>
+            <small
+              class="mensaje-error"
+              *ngIf="
+                formHistorial.controls['altura'].errors?.['min'] ||
+                            (formHistorial.controls['altura'].errors?.['max'] &&
+                            formHistorial.controls['altura'].touched)
+                          "
+            >
+              La altura debe ser de 1 a 2.5 mts
+            </small>
+          </div>
+
+          <!-- INPUT PESO -->
+          <div class="col-sm mb-3">
+            <label for="peso" class="form-label">Peso</label>
+            <input
+              formControlName="peso"
+              type="number"
+              class="form-control"
+              placeholder="Peso"
+              min="20"
+              max="150"
+            />
+            <small
+              class="mensaje-error"
+              *ngIf="
+                formHistorial.controls['peso'].errors?.['required'] &&
+        formHistorial.controls['peso'].touched
+                          "
+            >
+              El Peso es requerido
+            </small>
+            <small
+              class="mensaje-error"
+              *ngIf="
+                formHistorial.controls['peso'].errors?.['min'] ||
+                            (formHistorial.controls['peso'].errors?.['max'] &&
+                            formHistorial.controls['peso'].touched)
+                          "
+            >
+              El Peso debe ser entre 20 y 150 kg
+            </small>
+          </div>
+
+          <!-- INPUT TEMPERATURA -->
+          <div class="col-sm mb-3">
+            <label for="temperatura" class="form-label">Temperatura</label>
+            <input
+              formControlName="temperatura"
+              type="number"
+              class="form-control"
+              placeholder="Temperatura"
+              min="35"
+              max="45"
+            />
+            <small
+              class="mensaje-error"
+              *ngIf="
+                formHistorial.controls['temperatura'].errors?.['required'] &&
+        formHistorial.controls['temperatura'].touched
+                          "
+            >
+              La Temperatura es requerida
+            </small>
+            <small
+              class="mensaje-error"
+              *ngIf="
+                formHistorial.controls['temperatura'].errors?.['min'] ||
+                            (formHistorial.controls['temperatura'].errors?.['max'] &&
+                            formHistorial.controls['temperatura'].touched)
+                          "
+            >
+              La Temperatura debe ser entre 35 y 45°C
+            </small>
+          </div>
+
+          <!-- INPUT PRESION -->
+          <div class="col-sm mb-3">
+            <label for="presion" class="form-label">Presión</label>
+            <input
+              formControlName="presion"
+              type="text"
+              class="form-control"
+              placeholder="Presión"
+            />
+            <small
+              class="mensaje-error"
+              *ngIf="
+                          formHistorial.controls['presion'].errors?.['required'] &&
+                  formHistorial.controls['presion'].touched
+                                    "
+            >
+              La Presión es requerida
+            </small>
+          </div>
+        </form>
+        <!-- <div class="contenedor-adicionales">
+          <h3>Agregar datos adicionales</h3>
+          <button
+            type="button"
+            class="btn btn-warning"
+            (click)="agregarClaveValor()"
+          >
+            Agregar
+          </button>
+          <div>
+            <div class="row mt-2" *ngIf="cantidadClaveValor >= 1">
+              <div class="col">
+                <input
+                  [(ngModel)]="dato1[0]"
+                  type="text"
+                  class="form-control"
+                  placeholder="Dato"
+                />
+              </div>
+              <div class="col">
+                <input
+                  [(ngModel)]="dato1[1]"
+                  type="text"
+                  class="form-control"
+                  placeholder="Valor"
+                />
+              </div>
+            </div>
+            <div class="row mt-2" *ngIf="cantidadClaveValor > 1">
+              <div class="col">
+                <input
+                  [(ngModel)]="dato2[0]"
+                  type="text"
+                  class="form-control"
+                  placeholder="Dato"
+                />
+              </div>
+              <div class="col">
+                <input
+                  [(ngModel)]="dato2[1]"
+                  type="text"
+                  class="form-control"
+                  placeholder="Valor"
+                />
+              </div>
+            </div>
+            <div class="row mt-2" *ngIf="cantidadClaveValor == 3">
+              <div class="col">
+                <input
+                  [(ngModel)]="dato3[0]"
+                  type="text"
+                  class="form-control"
+                  placeholder="Dato"
+                />
+              </div>
+              <div class="col">
+                <input
+                  [(ngModel)]="dato3[1]"
+                  type="text"
+                  class="form-control"
+                  placeholder="Valor"
+                />
+              </div>
+            </div>
+          </div>
+        </div> -->
+
+        <button
+          type="submit"
+          class="btn btn-success"
+          style="float: right; margin-top: 1rem"
+          data-bs-dismiss="modal"
+          (click)="crearHistorialClinico()"
+          [disabled]="formHistorial.invalid"
+        >
+          Guardar Historial
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
+</body>

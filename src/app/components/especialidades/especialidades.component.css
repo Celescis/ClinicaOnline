@@ -1,0 +1,39 @@
+.main {
+  width: 300px;
+  height: 800px;
+  background-color: #236f2d72;
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  margin-left: 30%;
+  border-radius: 10px;
+  box-shadow: 5px 20px 50px #000;
+}
+
+.custom-list {
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
+ul {
+  list-style-type: style type none;;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 1px;
+}
+
+.btn {
+  padding: 1;
+  width: 100%;
+  background: transparent;
+  border: 1px groove rgba(0, 0, 0, 0.315);
+  border-radius: 0;
+  text-align: left;
+  margin-top: 0;
+  height: 20px;
+}
+
+.btn:hover {
+  background-color: #4c7752;
+}

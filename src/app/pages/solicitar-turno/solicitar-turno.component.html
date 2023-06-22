@@ -1,0 +1,138 @@
+<body>
+    <div *ngIf="spinner" class="spinner-container">
+        <span class="loader"></span>
+    </div>
+    <button class="btn-menu-volver" (click)="volverMenuPrincipal()">Volver al menú</button>
+    <div class="main">
+        <div class="contenedor-especialistas" *ngIf="patientSelectionMenu">
+            <h3>PACIENTES</h3>
+            <div class="row" style="overflow-x: scroll">
+                <div class="col carta-especialista" *ngFor="let pac of pacientesList" (click)="showPatient(pac)">
+                    <img class="carta-especialista" style="
+                    border-radius: 50%;
+                    width: 10rem;
+                    height: 10rem;
+                    display: flex;
+                    justify-content: center;
+                  " src="{{ pac.fotos[0] }}" alt="imagen" />
+                    <p>{{ pac.nombre }} - {{ pac.apellido }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="contenedor-especialistas" *ngIf="specialistSelectionMenu && !patientSelectionMenu">
+            <h3>ESPECIALISTAS</h3>
+            <div class="contenerdor-carta-esp" style="display: flex; justify-content: center">
+                <div *ngFor="let esp of especialistasList" (click)="showSpeciality(esp)">
+                    <div>
+                        <img class="carta-especialista" style="
+                  border-radius: 50%;
+                  width: 10rem;
+                  height: 10rem;
+                  display: flex;
+                  justify-content: center;
+                " src="{{ esp.fotos[0] }}" alt="imagen" />
+                        <p style="text-align: center; font-weight: bolder">
+                            {{ esp.apellido }}, {{ esp.nombre }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="contenedor-especialistas" *ngIf="activeEspecialista && !turnsSelectionMenu">
+            <h3>ESPECIALIDADES</h3>
+            <div class="row">
+                <div class="col especialidades" style="border-radius: 2rem"
+                    *ngFor="let especialidad of activeEspecialista.especialidad" (click)="showTurns(especialidad)">
+                    <img *ngIf="especialidad.nombre == 'Cardiología'" src="/assets/especialidades/cardiologo.png"
+                        alt="" />
+                    <img *ngIf="especialidad.nombre == 'Odontología'" src="/assets/especialidades/dentista.png"
+                        alt="" />
+                    <img *ngIf="especialidad.nombre == 'Endocrinología'" src="/assets/especialidades/endocrino.png"
+                        alt="" />
+                    <img *ngIf="
+                especialidad.nombre != 'Odontología' &&
+                especialidad.nombre != 'Cardiología' &&
+                especialidad.nombre != 'Endocrinología'
+              " src="/assets/usuarios/medicos.png" alt="" />
+                    <p>{{ especialidad.nombre }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="contenedor-especialistas" *ngIf="turnsSelectionMenu">
+            <h3>SELECCIÓN DE TURNO</h3>
+            <div class="row">
+                <div class="col carta-turno">
+                    <img src="{{ activeEspecialista.fotos[0] }}" alt="imagen" />
+                    <p>
+                        {{ activeEspecialista.apellido }}, {{ activeEspecialista.nombre }}
+                    </p>
+                    <p>{{ speciality.nombre }}</p>
+                </div>
+                <div class="col turnos-desk">
+                    <button class="btn btn-success" style="
+                text-transform: uppercase;
+                margin-left: 0.5rem;
+                margin-right: 0.5rem;
+                margin-bottom: 0.5rem;
+              " *ngFor="let dia of diasAMostrar" (click)="loadFreeHoursOneDay(dia)">
+                        {{ dia | date: 'd/M/yy'}}
+                    </button>
+                    <br />
+                    <p *ngIf="diasAMostrar.length == 0" style="text-align: center">
+                        No hay turnos disponibles
+                    </p>
+                    <div class="contenedor-btn-hora">
+                        <button class="btn btn-info" style="
+                  width: 4rem;
+                  height: 4rem;
+                  border-radius: 1rem;
+                  margin: 0.1rem;
+                " *ngFor="let turno of turnosDeUnDiaAMostrar" (click)="seleccionarTurno(turno)">
+                            {{ turno.fecha | date: 'h:mm' }}
+                        </button>
+                    </div>
+                    <button *ngIf="botonPedirTurno" class="btn btn-success" style="margin-top: 1rem; width: 100%"
+                        (click)="solicitarTurno()">
+                        Solicitar Turno
+                    </button>
+                </div>
+            </div>
+
+            <div class="row turnos-resp">
+                <div class="col">
+                    <button class="btn btn-success btn-dia" style="
+                text-transform: uppercase;
+                margin-left: 0.5rem;
+                margin-right: 0.5rem;
+                margin-bottom: 0.5rem;
+              " *ngFor="let dia of diasAMostrar" (click)="loadFreeHoursOneDay(dia)">
+                        {{ dia | date: 'M/d/yy'}}
+                    </button>
+                    <br />
+                    <p *ngIf="diasAMostrar.length == 0" style="text-align: center">
+                        No hay turnos disponibles
+                    </p>
+                    <div class="contenedor-btn-hora">
+                        <button class="btn btn-info" style="
+                  width: 4rem;
+                  height: 4rem;
+                  border-radius: 1rem;
+                  margin: 0.1rem;
+                " *ngFor="let turno of turnosDeUnDiaAMostrar" (click)="seleccionarTurno(turno)">
+                            {{ turno.fecha | date: 'h:mm' }}
+                        </button>
+                    </div>
+                    <button *ngIf="botonPedirTurno" class="btn btn-success" style="margin-top: 1rem; width: 100%"
+                        (click)="solicitarTurno()">
+                        Solicitar Turno
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</body>

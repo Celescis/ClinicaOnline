@@ -1,0 +1,265 @@
+<body>
+  <div *ngIf="spinner" class="spinner-container">
+    <span class="loader"></span>
+  </div>
+  <div class="main">
+
+    <div class="perfil" *ngIf="!authService.esEspecialista">
+      <h3>MI PERFIL</h3>
+      <div style="display: flex; justify-content: center">
+        <img class="img-perfil" src="{{ user?.fotos?.length > 0 ? user.fotos[0] : '' }}" alt="imagen 1" />
+
+        <img class="img-perfil" style="width: 5rem; height: 5rem" src="{{ user.fotos[1] }}" alt="imagen 2"
+          *ngIf="isPaciente" />
+      </div>
+      <!-- PERFIL USUARIO  -->
+      <div class="row" *ngIf="isPaciente">
+        <div class="col">
+          <label>Nombre</label>
+          <p>{{ user.nombre }}</p>
+          <label>Apellido</label>
+          <p>{{ user.apellido }}</p>
+          <label>Edad</label>
+          <p>{{ user.edad }} años</p>
+          <label>DNI</label>
+          <p>{{ user.dni }}</p>
+        </div>
+        <div class="col">
+          <label>Correo</label>
+          <p>{{ user.mail }}</p>
+          <label>Obra Social</label>
+          <p>{{ user.obraSocial }}</p>
+          <label>Perfil</label>
+          <p>Paciente</p>
+          <label>Historial Clínico</label>
+          <br />
+          <button *ngIf="hayHistorial" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-info"
+            (click)="verHistorialClinico()">
+            Ver Historial Clínico
+          </button>
+          <p *ngIf="!hayHistorial">No hay historial cliníco disponible</p>
+        </div>
+      </div>
+
+      <!-- PERFIL ADMINISTRADOR  -->
+      <div class="row" *ngIf="authService.esAdmin">
+        <div class="col">
+          <label>Nombre</label>
+          <p>{{ user.nombre }}</p>
+          <label>Apellido</label>
+          <p>{{ user.apellido }}</p>
+          <label>Edad</label>
+          <p>{{ user.edad }} años</p>
+        </div>
+        <div class="col">
+          <label>DNI</label>
+          <p>{{ user.dni }}</p>
+          <label>Correo</label>
+          <p>{{ user.mail }}</p>
+          <label>Tipo de Usuario</label>
+          <p>Administrador</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PERFIL ESPECIALISTA -->
+    <div class="perfil-esp" *ngIf="authService.esEspecialista">
+      <h3>MI PERFIL</h3>
+      <div style="display: flex; justify-content: center">
+        <img class="img-perfil" src="{{ user.fotos[0] }}" alt="imagen 1" />
+        <img class="img-perfil" style="width: 3rem; height: 3rem" src="{{ user.fotos[1] }}" alt="imagen 2"
+          *ngIf="isPaciente" />
+      </div>
+
+      <!-- PERFIL ESPECIALISTA -->
+      <div class="row" *ngIf="authService.esEspecialista">
+        <div class="col col-3">
+          <label>Nombre</label>
+          <p>{{ user.nombre }}</p>
+          <label>Apellido</label>
+          <p>{{ user.apellido }}</p>
+          <label>Edad</label>
+          <p>{{ user.edad }} años</p>
+          <label>DNI</label>
+          <p>{{ user.dni }}</p>
+        </div>
+        <div class="col col-4">
+          <label>Correo</label>
+          <p>{{ user.mail }}</p>
+          <label>Especialidad</label>
+
+          <p>
+            <span *ngFor="let esp of user.especialidad">{{ esp.nombre }} / </span>
+          </p>
+          <button class="btn btn-secondary" [ngClass]="especialidad1 ? 'btn-info' : ''"
+            style="text-transform: uppercase; width: 9rem; margin-top: 0.5rem" (click)="showTurnsOne()">
+            {{ user.especialidad[0].nombre }}
+          </button>
+          <button *ngIf="user.especialidad[1]" class="btn btn-secondary" [ngClass]="especialidad2 ? 'btn-info' : ''"
+            style="text-transform: uppercase; width: 9rem; margin-top: 0.5rem" (click)="showTurnsTwo()">
+            {{ user.especialidad[1].nombre}}
+          </button>
+
+        </div>
+        <div class="col col-5 col-horarios">
+          <label>Mis Horarios</label>
+          <div class="dias-contenedor">
+            <button class="btn btn-success" [ngClass]="lunes ? 'btn-danger' : ''" (click)="addDay('lunes')">
+              Lunes
+            </button>
+            <button class="btn btn-success" [ngClass]="martes ? 'btn-danger' : ''" (click)="addDay('martes')">
+              Martes
+            </button>
+            <button class="btn btn-success" [ngClass]="miercoles ? 'btn-danger' : ''" (click)="addDay('miércoles')">
+              Miércoles
+            </button>
+            <button class="btn btn-success" [ngClass]="jueves ? 'btn-danger' : ''" (click)="addDay('jueves')">
+              Jueves
+            </button>
+            <button class="btn btn-success" [ngClass]="viernes ? 'btn-danger' : ''" (click)="addDay('viernes')">
+              Viernes
+            </button>
+            <button class="btn btn-success" [ngClass]="sabado ? 'btn-danger' : ''" (click)="addDay('sábado')">
+              Sábado
+            </button>
+          </div>
+          <label style="margin-top: 1rem; margin-bottom: 1rem">Duración de Turno (min)</label>
+          <input [(ngModel)]="turnDuration" class="form-control" type="number" placeholder="30 Minutos" />
+          <button style="margin-top: 1rem" class="btn btn-success" (click)="updateUser()">
+            Guardar Cambios
+          </button>
+        </div>
+      </div>
+      <div class="row" *ngIf="authService.esEspecialista">
+        <div class="col col-horarios-2">
+          <label>Mis Horarios</label>
+          <div class="dias-contenedor">
+            <button class="btn btn-success" [ngClass]="lunes ? 'btn-danger' : ''" (click)="addDay('lunes')">
+              Lunes
+            </button>
+            <button class="btn btn-success" [ngClass]="martes ? 'btn-danger' : ''" (click)="addDay('martes')">
+              Martes
+            </button>
+            <button class="btn btn-success" [ngClass]="miercoles ? 'btn-danger' : ''" (click)="addDay('miércoles')">
+              Miércoles
+            </button>
+            <button class="btn btn-success" [ngClass]="jueves ? 'btn-danger' : ''" (click)="addDay('jueves')">
+              Jueves
+            </button>
+            <button class="btn btn-success" [ngClass]="viernes ? 'btn-danger' : ''" (click)="addDay('viernes')">
+              Viernes
+            </button>
+            <button class="btn btn-success" [ngClass]="sabado ? 'btn-danger' : ''" (click)="addDay('sábado')">
+              Sábado
+            </button>
+          </div>
+          <label style="margin-top: 1rem; margin-bottom: 1rem">Duración de Turno (min)</label>
+          <input [(ngModel)]="turnDuration" class="form-control" type="number" placeholder="30 Minutos" />
+          <button style="margin-top: 1rem" class="btn btn-success" (click)="updateUser()">
+            Guardar Cambios
+          </button>
+        </div>
+      </div>
+
+    </div>
+    <div class="perfil-container"></div>
+  </div>
+
+  <!-- <div class="modal fade modal-xl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <button type="button" class="btn btn-danger" style="
+              margin-bottom: 1rem;
+              display: block;
+              margin-left: auto;
+              margin-right: auto;
+            " [disabled]="!hayHistorialFiltrado" (click)="crearPDF()">
+            Descargar PDF
+          </button>
+          <label style="font-size: 1rem; font-weight: bolder; margin-right: 2rem">FILTROS:
+          </label>
+          <button class="btn" [ngClass]="btnTodo ? 'btn-info' : 'btn-warning'" style="margin-right: 1rem"
+            (click)="filtrarHistorialClinico('todo')">
+            TODO
+          </button>
+          <button class="btn" [ngClass]="btnCardiologia ? 'btn-info' : 'btn-warning'" style="margin-right: 1rem"
+            (click)="filtrarHistorialClinico('Odontología')">
+            Odontología
+          </button>
+          <button class="btn" [ngClass]="btnOdontologia ? 'btn-info' : 'btn-warning'" style="margin-right: 1rem"
+            (click)="filtrarHistorialClinico('Cardiología')">
+            Cardiología
+          </button>
+          <button class="btn" [ngClass]="btnEndocrinologia ? 'btn-info' : 'btn-warning'" style="margin-right: 1rem"
+            (click)="filtrarHistorialClinico('Endocrinología')">
+            Endocrinología
+          </button>
+          <div id="pdf">
+            <p style="text-align: right; font-size: 1rem">
+              {{ fechaActual }}
+            </p>
+            <div style="display: flex; align-content: center; margin-bottom: 2rem">
+              <img src="/assets/usuarios/medicos.png" style="width: 100px" alt="logo" />
+              <h2 style="
+                  text-align: center;
+                  font-size: 1.5rem;
+                  font-weight: bolder;
+                  padding-top: 2rem;
+                  margin-left: 2rem;
+                " id="exampleModalLabel">
+                CLÍNICA ONLINE
+              </h2>
+            </div>
+            <h1 style="text-align: center; font-size: 2rem">
+              HISTORIAL CLÍNICO DE
+              <span style="text-transform: uppercase; font-weight: bolder">{{ user?.apellido }} {{ user?.nombre
+                }}</span>
+            </h1>
+            <h3 *ngIf="!hayHistorialFiltrado" style="text-align: center; color: #f00">
+              El paciente no tiene historial clínico con la especialidad
+              seleccionada...
+            </h3>
+            <div *ngFor="let historial of historialClinicoFiltrado" class="carta-historial">
+              <h3>
+                INFORME -
+                <span style="text-transform: uppercase">{{
+                  historial?.especialidad
+                  }}</span>
+                - {{ historial?.fecha }}
+              </h3>
+              <hr />
+              <p>
+                <span>Especialista: </span>{{ historial?.especialista?.apellido }},
+                {{ historial?.especialista?.nombre }}
+              </p>
+              <p><span>Detalle: </span></p>
+              <p>Altura: {{ historial?.detalle?.altura }}</p>
+              <p>Peso: {{ historial?.detalle?.peso }}</p>
+              <p>Temperatura: {{ historial?.detalle?.temperatura }}</p>
+              <p>Presión: {{ historial?.detalle?.presion }}</p> -->
+  <!-- <p><span>Detalles adicionales: </span></p>
+              <p *ngIf="historial?.detalleAdicional?.clave1">
+                {{ historial?.detalleAdicional?.clave1 }}:
+                {{ historial?.detalleAdicional?.valor1 }}
+              </p>
+              <p *ngIf="historial?.detalleAdicional?.clave2">
+                {{ historial?.detalleAdicional?.clave2 }}:
+                {{ historial?.detalleAdicional?.valor2 }}
+              </p>
+              <p *ngIf="historial?.detalleAdicional?.clave3">
+                {{ historial?.detalleAdicional?.clave3 }}:
+                {{ historial?.detalleAdicional?.valor3 }}
+              </p> -->
+  <!-- <hr /> -->
+  <!-- </div> -->
+  <!-- </div> -->
+  <!-- </div> -->
+  <!-- </div> -->
+  <!-- </div> -->
+  <!-- </div> -->
+</body>

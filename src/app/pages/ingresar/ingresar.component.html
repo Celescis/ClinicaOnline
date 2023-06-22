@@ -1,0 +1,33 @@
+<body>
+    <button *ngIf="esAdmin" class="btn-menu-volver" (click)="volverMenuPrincipal()">Volver al menú</button>
+    <div class="main" *ngIf="sinElegir && !esAdmin">
+        <div class="ingreso">
+            <h1 class="entry-title">
+                INGRESAR COMO:
+            </h1>
+        </div>
+        <div class="container" style="position: fixed;top: 40%;">
+            <div class="d-flex flex-wrap">
+
+                <div class="flex-column" style="flex: 2;display: flex; justify-content: center;align-items: center;">
+                    <img src="/assets/usuarios/personas.png" alt="" style="width: 50%;">
+                    <button class="boton" (click)="verificarIngreso(1)">PACIENTE</button>
+                </div>
+
+                <div class="flex-column" style="flex: 2;display: flex; justify-content: center;align-items: center;">
+                    <img src="/assets/usuarios/medicos.png" alt="" style="width: 50%;">
+                    <button class="boton" (click)="verificarIngreso(2)">ESPECIALISTA</button>
+                </div>
+
+                <div class="flex-column" style="flex: 2;display: flex; justify-content: center;align-items: center;">
+                    <img src="/assets/usuarios/admin.png" alt="" style="width: 50%;">
+                    <button class="boton" (click)="verificarIngreso(3)">ADMINISTRADOR</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="esAdmin">
+        <app-registro [login]="esAdmin" [esPaciente]="esPaciente"></app-registro>
+    </div>
+</body>

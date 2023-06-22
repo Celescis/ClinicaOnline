@@ -1,0 +1,31 @@
+<div class="main">
+    <div *ngIf="especialidades.length > 0">
+        <h3
+            style="font-size: 20px;align-items: center;justify-content: center;display: flex;font-family: 'Poppins', sans-serif; margin-top: 2%; font-weight: 600;">
+            Seleccione una
+            especialidad:</h3>
+        <input type="text" [(ngModel)]="valorInput" (input)="filtrarLista()" placeholder="Buscar"
+            style="width: 80%;" pattern="[a-zA-Z ]+" title="Solo se permiten letras" (blur)="validarEspecialidad()"
+            [ngClass]="{'is-invalid': !inputValidado, 'is-valid': inputValidado}">
+            <div class="invalid-feedback">
+                Sólo ingresar letras
+              </div>
+              <div class="valid-feedback">
+                Especialidad válida
+              </div>
+        <button (click)="agregarItem()" style="width: 10%;"><i class="fa fa-plus" aria-hidden="true"></i></button>
+        <button (click)="ayuda()" style="width: 10%;"><i class="fa fa-question" aria-hidden="true"></i></button>
+        <ul>
+            <div *ngIf="listaFiltrada.length==0"
+                style="display: flex; flex-direction: column; align-items: flex-start;height: 20px;font-family: 'Poppins', sans-serif;">
+                <button *ngFor="let item of especialidades" class="btn" style="height: 70px;width: 300px;"
+                    (click)="clickListado(item)">{{item}}</button>
+            </div>
+            <div *ngIf="listaFiltrada.length>0"
+                style="display: flex; flex-direction: column; align-items: flex-start;height: 20px;font-family: 'Poppins', sans-serif;">
+                <button *ngFor="let especialidad of listaFiltrada" class="btn" style="height: 70px;width: 300px;"
+                    (click)="clickListado(especialidad)">{{ especialidad }}</button>
+            </div>
+        </ul>
+    </div>
+</div>
