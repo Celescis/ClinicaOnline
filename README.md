@@ -62,7 +62,7 @@
 
 ## Solicitar Turnos Administrador
 ![](Fotos/Solicitar%20turno%20administrador.png)
-### Los administradores podrán solicitar turnos para los pacientes y eligir sus especialista y especialidades al igual que los pacientes.
+### Los administradores podrán solicitar turnos para los pacientes y eligir sus especialistas y especialidades al igual que los pacientes.
 
 ## Gestión Turnos Administrador
 ![](Fotos/Gestion%20turnos%20administrador.png)
@@ -70,7 +70,7 @@
 
 ## Sección Usuarios Administrador
 ![](Fotos/Seccion%20usuarios%20administrador.png)
-### Los administradores podrán ver a todos los usuarios, en el caso de los pacientes podrán ver sus historiales clínicos y descargarlos en formato EXCEL y a los especialistas se les podrá habilitar o deshabilitar el ingreso al sistema. Además los administradores pueden registrar pacientes, especialistas y a otros administradores:
+### Los administradores podrán ver a todos los usuarios, en el caso de los pacientes podrán ver sus historiales clínicos y descargarlos en formato EXCEL y a los especialistas se les podrá habilitar o deshabilitar el acceso al sistema. Además los administradores pueden registrar pacientes, especialistas y a otros administradores:
 ![](Fotos/Registro%20usuarios%20administrador.png)
 
 ## Informes Administrador
@@ -80,17 +80,17 @@
 
 ### Todos los informes tendrán la opción de ser descargados en formato PDF o Excel:
 
-###- Log de ingresos al sistema. Indicando el usuario, día y horario en que ingresó al sistema:
+### Log de ingresos al sistema. Indicando el usuario, día y horario en que ingresó al sistema:
 ![](Fotos/Informes%20logs%20administrador.png)
 
-###- Cantidad de turnos por especialidad:
+### Cantidad de turnos por especialidad:
 ![](Fotos/Turnos%20por%20especialidad%20administrador.png)
 
-###- Cantidad de turnos por día:
+### Cantidad de turnos por día:
 ![](Fotos/Turnos%20por%20dia%20administrador.png)
 
-###- Cantidad de turnos solicitados por médico en un lapso de tiempo:
+### Cantidad de turnos solicitados por médico en un lapso de tiempo:
 ![](Fotos/Turnos%20solicitados%20por%20medico%20administrador.png)
 
-###- Cantidad de turnos finalizados por médico en un lapso de tiempo:
+### Cantidad de turnos finalizados por médico en un lapso de tiempo:
 ![](Fotos/Turnos%20finalizados%20por%20medico%20administrador.png)
