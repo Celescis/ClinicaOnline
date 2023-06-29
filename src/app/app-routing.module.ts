@@ -10,18 +10,36 @@ import { CanActivateAdministradorGuard } from './guards/can-activate-administrad
 import { MisTurnosComponent } from './pages/mis-turnos/mis-turnos.component';
 import { MiPerfilComponent } from './pages/mi-perfil/mi-perfil.component';
 import { SolicitarTurnoComponent } from './pages/solicitar-turno/solicitar-turno.component';
+import { TurnosComponent } from './pages/turnos/turnos.component';
+import { AdmPacientesComponent } from './pages/adm-pacientes/adm-pacientes.component';
+import { InformesComponent } from './pages/informes/informes.component';
 
 const routes: Routes = [
+  {
+    path: 'admin',
+    component: AdmUsuariosComponent,
+    children: [{ path: 'adm-usuarios', component: AdmUsuariosComponent , canActivate: [CanActivateAdministradorGuard]}],
+  },
+  {
+    path: 'admin',
+    component: TurnosComponent,
+    children: [{ path: 'turnos', component: TurnosComponent  , canActivate: [CanActivateAdministradorGuard]}],
+  },
+  {
+    path: 'admin',
+    component: InformesComponent,
+    children: [{ path: 'informes', component: InformesComponent  , canActivate: [CanActivateAdministradorGuard]}],
+  },
   { path: 'solicitar-turno', component: SolicitarTurnoComponent},
   { path: 'miPerfil', component: MiPerfilComponent},
   { path: 'misTurnos', component: MisTurnosComponent},
-  { path: 'adm-usuarios', component: AdmUsuariosComponent, canActivate: [CanActivateAdministradorGuard] },
+  { path: 'adm-pacientes', component: AdmPacientesComponent},
   { path: 'especialidades', component: EspecialidadesComponent },
   { path: 'registroEspecialista', component: RegistroEspecialistaComponent },
-  { path: 'registro', component: RegistroComponent },
-  { path: 'ingresar', component: IngresarComponent },
-  { path: 'home', component: HomeComponent },
-  { path: '', redirectTo: '/home', pathMatch: 'full' }
+  { path: 'registro', component: RegistroComponent},
+  { path: 'ingresar', component: IngresarComponent, data: { animation: 'Ingresar' }},
+  { path: 'home', component: HomeComponent, data: { animation: 'Home' }},
+  { path: '', component: HomeComponent, data: { animation: 'Home' }}
 ];
 
 @NgModule({

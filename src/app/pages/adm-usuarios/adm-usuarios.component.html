@@ -1,12 +1,59 @@
+<div *ngIf="spinner" class="spinner-container">
+    <span class="loader"></span>
+</div>
 <div class="main">
-    <button class="btn-habilitar btn-nuevo-usuario" *ngIf="!createrUserMenu" (click)="showCreateUserMenu()">
-        REGISTRAR NUEVO USUARIO
-    </button>
-    <button class="btn-habilitar btn-menu-volver" *ngIf="createrUserMenu" (click)="showUserList()">
-        VOLVER AL LISTADO DE USUARIOS
-    </button>
-    <h3 *ngIf="!createrUserMenu">LISTADO DE USUARIOS</h3>
-    <div class="tabla-usuario" *ngIf="!createrUserMenu">
+    <h3 *ngIf="!createrUserMenu">ADMINISTRACIÓN DE USUARIOS</h3>
+    <div class="button-container">
+        <div class="left-buttons">
+          <button class="btn-habilitar" *ngIf="!createrUserMenu" (click)="showCreateUserMenu()">
+            REGISTRAR NUEVO USUARIO
+          </button>
+          <button class="btn-habilitar" style="margin-top: 5%;" *ngIf="createrUserMenu && !formEspecialista" (click)="showUserList()">
+            VOLVER AL LISTADO DE USUARIOS
+          </button>
+        </div>
+        <div class="right-buttons">
+          <button class="btn-habilitar" *ngIf="!createrUserMenu" (click)="descargarExcel()">
+            DESCARGAR LISTADO COMPLETO
+          </button>
+        </div>
+      </div>
+    <div class="card-container" *ngIf="!createrUserMenu"
+        style="display: flex; align-items: center;justify-content: center;">
+        <div *ngFor="let user of usersList">
+            <div class="card">
+                <div class="card-content">
+                    <img class="img-perfil" src="{{ user?.fotos[0] }}" alt="imagen" />
+                    <span style="text-transform: upperCase; font-weight: bolder">{{ user.apellido }}, {{ user.nombre }}</span>
+                    <div class="card-button">
+                        <div *ngIf="user.hasOwnProperty('especialidad')">
+                            <button class="btn btn-success" *ngIf="!user.habilitado" (click)="updateUser(user, 1)">
+                                Habilitar
+                            </button>
+                            <button class="btn btn-danger" *ngIf="user.habilitado" (click)="updateUser(user, 2)">
+                                Deshabilitar
+                            </button>
+                        </div>
+                        <div *ngIf="user.hasOwnProperty('obraSocial')">
+                            <div *ngIf="user.historialesClinicos?.length>0" >
+                                <button data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal" class="btn btn-info" (click)="verHistorialClinico(user)">
+                                    Ver historial clínico
+                                </button>
+                                <button (click)="verTurnosUsuario(user)" class="btn btn-warning" style="margin-left: 1px;">
+                                    Descargar 
+                                </button>
+                            </div>
+                            <p *ngIf="user.historialesClinicos?.length==0">No hay historial clínico</p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="tabla-usuario" *ngIf="!createrUserMenu">
 
         <table class="table">
             <thead>
@@ -50,9 +97,71 @@
             </tbody>
         </table>
         
-    </div>
-    <div *ngIf="spinner" class="spinner-container">
-        <span class="loader"></span>
+    </div> -->
+
+
+</div>
+<div class="modal fade modal-xl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="display: flex; justify-content: space-between;">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <p style="text-align: right; font-size: 1rem">
+                        {{ fechaActual }}
+                    </p>
+                    <div *ngFor="let historial of historialClinico" class="carta-historial">
+                        <div style="display: flex;align-items: center;justify-content: center;">
+                            <img class="img-perfil" src="{{ historial?.paciente?.fotos[0] }}" alt="imagen"/>
+                        </div>
+                        <h1 style="text-align: center; font-size: 2rem">
+                            HISTORIAL CLÍNICO DE
+                            <span style="text-transform: uppercase; font-weight: bolder">{{
+                                historial?.paciente?.apellido }} {{
+                                historial?.paciente?.nombre
+                                }}</span>
+                        </h1>
+                        <br>
+                        <h3>
+                            INFORME DE
+                            <span style="text-transform: uppercase">{{
+                                historial?.especialidad
+                                }}: </span>
+                            <b>{{ (historial?.fecha.seconds * 1000) | date: 'dd/MM/yyyy HH:mm' }}</b>
+                            <br>
+                            <br>
+                            ESPECIALISTA:
+                            <span style="text-transform: uppercase; font-weight: bolder">{{ historial?.especialista?.apellido }},
+                                {{ historial?.especialista?.nombre }}</span>
+                        </h3>
+                        <hr />
+                        <div style="background-color: #83bf9b; padding: 2%;">
+                            <p><span style="text-transform: uppercase; font-weight: bolder">Detalle: </span></p>
+                            <p>Altura: {{ historial?.detalle?.altura }} mts</p>
+                            <p>Peso: {{ historial?.detalle?.peso }} kg</p>
+                            <p>Temperatura: {{ historial?.detalle?.temperatura }} °C</p>
+                            <p>Presión: {{ historial?.detalle?.presion }}</p>
+                            <p><span>Detalles adicionales: </span></p>
+                            <p *ngIf="historial?.detalleAdicional?.clave1">
+                                {{ historial?.detalleAdicional?.clave1 }}:
+                                {{ historial?.detalleAdicional?.valor1 }}
+                            </p>
+                            <p *ngIf="historial?.detalleAdicional?.clave2">
+                                {{ historial?.detalleAdicional?.clave2 }}:
+                                {{ historial?.detalleAdicional?.valor2 }}
+                            </p>
+                            <p *ngIf="historial?.detalleAdicional?.clave3">
+                                {{ historial?.detalleAdicional?.clave3 }}:
+                                {{ historial?.detalleAdicional?.valor3 }}
+                            </p>
+                        </div>
+                        <hr />
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -79,14 +188,14 @@
     </div>
 </div>
 
-<div class="registro-paciente" *ngIf="formPaciente" >
-    <button class="btn-volver" (click)="goToRegistro()">
+<div class="registro-paciente" *ngIf="formPaciente">
+    <button *ngIf="formPaciente" class="btn-volver" style="margin-left: 10%;" (click)="goToRegistro()">
         VOLVER
     </button>
     <app-registro [dondeEsta]="dondeEsta"></app-registro>
 </div>
 <div class="registro-especialista" *ngIf="formEspecialista">
-    <button class="btn-volver2" (click)="goToRegistro()">
+    <button class="btn-volver2" style="margin-left: 10%;" (click)="goToRegistro()">
         VOLVER
     </button>
     <div style="margin-left: 15%;">
@@ -94,9 +203,8 @@
     </div>
 </div>
 <div class="registro-especialista" *ngIf="formAdministrador">
-    <button class="btn-volver" (click)="goToRegistro()">
+    <button *ngIf="formAdministrador" class="btn-volver" style="margin-left: 10%;" (click)="goToRegistro()">
         VOLVER
     </button>
     <app-registro-especialista [dondeEsta]="dondeEsta" [admin]="true"></app-registro-especialista>
 </div>
-

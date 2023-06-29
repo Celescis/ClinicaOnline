@@ -240,6 +240,7 @@ export class FirestoreService {
     }
   }
   
+  
   createTurnList(turn: any) {
     this.angularFirestore
       .collection<any>('turnos')
@@ -264,7 +265,6 @@ export class FirestoreService {
       .update(turn)
       .then(() => { })
       .catch((error) => {
-        console.log(error.message);
         this.swalService.crearSwal('Ocurrio un error', 'Administrador', 'error');
       });
   }
@@ -295,6 +295,29 @@ export class FirestoreService {
   getHistorialesClinicos() {
     const collection = this.angularFirestore.collection<any>(
       'historialesClinicos'
+    );
+    return collection.valueChanges();
+  }
+
+  //INFORME USUARIOS
+  createUserLog(user: any) {
+    const log: any = {
+      fecha: new Date(),
+      uid: user.uid,
+      perfil: user.obraSocial ? "Paciente" : (user.especialidad ? "Especialista" : "Administrador"),
+      nombre: user.nombre,
+      apellido: user.apellido,
+      foto: user.fotos[0]
+    };
+  
+    return this.angularFirestore.collection('logUsuarios').add(log);
+  }
+  
+
+  getUsersLog() {
+    const collection = this.angularFirestore.collection<any>(
+      'logUsuarios',
+      (ref) => ref.orderBy('fecha', 'desc')
     );
     return collection.valueChanges();
   }

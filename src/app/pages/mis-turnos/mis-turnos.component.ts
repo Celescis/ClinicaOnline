@@ -54,9 +54,9 @@ export class MisTurnosComponent {
 
   cantidadClaveValor: number = 0;
   arrayClaveValorAdicionales: any[] = [];
-  dato1: string[] = ['clave 1', 'valor 1'];
-  dato2: string[] = ['clave 2', 'valor 2'];
-  dato3: string[] = ['clave 3', 'valor 3'];
+  dato1: string[] = ['', ''];
+  dato2: string[] = ['', ''];
+  dato3: string[] = ['', ''];
 
   palabraBusqueda: string = '';
   turnosFiltrados: any[] = [];
@@ -99,7 +99,7 @@ export class MisTurnosComponent {
             const turnSpecialist = turns[i].turnos;
             for (let j = 0; j < turnSpecialist.length; j++) {
               const turn = turnSpecialist[j];
-              if (turn.estado != 'disponible') {
+              if (turn.estado != 'disponible' && !this.turnList.includes(turn)) {
                 this.turnList.push(turn);
                 if (turn.paciente.uid == this.user.uid) {
                   this.turnosDelPaciente.push(turn);
@@ -111,6 +111,7 @@ export class MisTurnosComponent {
               }
             }
           }
+          
 
           for (let i = 0; i < this.auxPacientesDelEspecialista.length; i++) {
             const paciente = this.auxPacientesDelEspecialista[i];

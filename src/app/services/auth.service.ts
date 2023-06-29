@@ -6,7 +6,6 @@ import { SwalService } from './swal.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { map, of, switchMap } from 'rxjs';
 import { FirestoreService } from './firestore.service';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -18,16 +17,16 @@ export class AuthService {
   nombreLogueado: string = "";
   fotoLogueado: any;
   emailLogueado: string = "";
-  esAdmin: boolean;
+  esAdmin: boolean = false;
   esPaciente: boolean = false;
   esEspecialista: boolean = false;
   user$?: any;
+  userLog: any;
 
   constructor(private router: Router,
     private swalService: SwalService,
     private angularFireAuth: AngularFireAuth,
     public serviceFirestore: FirestoreService) {
-    this.esAdmin = false;
     this.user$ = this.angularFireAuth.authState.pipe(
       switchMap((user: any) => {
         if (user) {
@@ -56,7 +55,7 @@ export class AuthService {
             this.sePudo = true;
             this.esconderBotonCierre = false;
             this.esAdmin = admin;
-            this.fotoLogueado = foto;
+            this.fotoLogueado = foto
             if (nombre != undefined) {
               this.nombreLogueado = nombre;
             }
@@ -68,10 +67,17 @@ export class AuthService {
                 else if (user.especialidad) {
                   this.esEspecialista = true;
                 }
+
+                if (!this.userLog) {
+                  this.serviceFirestore.createUserLog(user);
+                  this.userLog = user;
+                }
               }
             });
+
             this.router.navigate(['/home']);
             this.swalService.crearSwal(`Ingreso exitoso`, "Bienvenido " + nombre + "!", 'success');
+
           }
           else {
             this.swalService.crearSwal(`Por favor revise su correo`, "Mail no verificado!", 'error');
@@ -105,5 +111,7 @@ export class AuthService {
     this.esPaciente = false;
     this.esEspecialista = false;
   }
+
+
 }
 

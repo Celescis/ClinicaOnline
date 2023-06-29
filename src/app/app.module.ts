@@ -22,8 +22,13 @@ import { AdmUsuariosComponent } from './pages/adm-usuarios/adm-usuarios.componen
 import { MisTurnosComponent } from './pages/mis-turnos/mis-turnos.component';
 import { MiPerfilComponent } from './pages/mi-perfil/mi-perfil.component';
 import { SolicitarTurnoComponent } from './pages/solicitar-turno/solicitar-turno.component';
-
-
+import { TurnosComponent } from './pages/turnos/turnos.component';
+import { AdmPacientesComponent } from './pages/adm-pacientes/adm-pacientes.component';
+import { InformesComponent } from './pages/informes/informes.component';
+import { BotonDirective } from './directives/boton.directive';
+import { HoverDirective } from './directives/hover.directive';
+import { TarjetaDirective } from './directives/tarjeta.directive';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -40,11 +45,18 @@ import { SolicitarTurnoComponent } from './pages/solicitar-turno/solicitar-turno
     MisTurnosComponent,
     MiPerfilComponent,
     SolicitarTurnoComponent,
+    TurnosComponent,
+    AdmPacientesComponent,
+    InformesComponent,
+    BotonDirective,
+    HoverDirective,
+    TarjetaDirective
 
   ],
   imports: [
     FormsModule,
     BrowserModule,
+    BrowserAnimationsModule,
     ReactiveFormsModule,
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),

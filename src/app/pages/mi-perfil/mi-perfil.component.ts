@@ -3,6 +3,8 @@ import { AuthService } from 'src/app/services/auth.service';
 import { FirestoreService } from 'src/app/services/firestore.service';
 import { SwalService } from 'src/app/services/swal.service';
 import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
+
 
 
 @Component({
@@ -34,15 +36,12 @@ export class MiPerfilComponent {
   historialClinicoFiltrado: any[] = [];
   hayHistorial: boolean = false;
   hayHistorialFiltrado: boolean = true;
-  btnTodo: boolean = true;
-  btnCardiologia: boolean = false;
-  btnOdontologia: boolean = false;
-  btnEndocrinologia: boolean = false;
   disableDaysOne: boolean[] = [];
   disableDaysTwo: boolean[] = [];
-  
-
+  listaEspecialidades: any[] = [];
+  especialidadSeleccionada: string | null = null;
   fechaActual: Date = new Date();
+  btnTodo:boolean=true;
 
   constructor(
     public authService: AuthService,
@@ -52,6 +51,13 @@ export class MiPerfilComponent {
 
   ngOnInit(): void {
     this.spinner = true;
+    //TRAER ESPECIALISTAS CON SUS ESPECIALIDADES
+    this.firestoreService.traerEsp().subscribe((especialistas) => {
+      especialistas.forEach((especialista) => {
+        const nombresEspecialidades = especialista.especialidad.map((especialidad: any) => especialidad.nombre);
+        this.listaEspecialidades = this.listaEspecialidades.concat(nombresEspecialidades);
+      });
+    });
 
     this.authService.user$.subscribe((user: any) => {
       if (user) {
@@ -101,7 +107,7 @@ export class MiPerfilComponent {
         this.specialistDays.push(day);
         this.notificationService.crearSwal('Día asignado', 'Mi Perfil', 'warning');
         this.activateDeactivateDayButton(day);
-      } else if (this.specialistDays.some((d) => d == day)) {
+      } else if (this.specialistDays.some((d) => d == day) && this?.user?.especialidad[0]?.diasTurnos?.some((d: any) => d == day)) {
         const index = this.specialistDays.indexOf(day);
         this.specialistDays.splice(index, 1);
         this.notificationService.crearSwal(
@@ -120,12 +126,12 @@ export class MiPerfilComponent {
     } else if (this.especialidad2) {
       if (
         !this.specialistDays.some((d) => d == day) &&
-        !this.user.especialidad[0].diasTurnos.some((d: any) => d == day)
+        !this.user?.especialidad[0]?.diasTurnos?.some((d: any) => d == day)
       ) {
         this.specialistDays.push(day);
         this.notificationService.crearSwal('Día asignado', 'Mi Perfil', 'info');
         this.activateDeactivateDayButton(day);
-      } else if (this.specialistDays.some((d) => d == day)) {
+      } else if (this.specialistDays.some((d) => d == day) && this.user?.especialidad[1]?.diasTurnos?.some((d: any) => d == day)) {
         const index = this.specialistDays.indexOf(day);
         this.specialistDays.splice(index, 1);
         this.notificationService.crearSwal(
@@ -143,13 +149,6 @@ export class MiPerfilComponent {
       }
     }
   }
-  
-  
-  public getDayIndex(day: string): number {
-    const days = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
-    return days.indexOf(day.toLowerCase());
-  }
-  
 
   activateDeactivateDayButton(day: string) {
     switch (day) {
@@ -237,10 +236,6 @@ export class MiPerfilComponent {
       esp.duracionTurno = this.turnDuration;
       this.user.especialidad[1] = esp;
     }
-
-    // *******************************************************************
-    // *******************************************************************
-    // *******************************************************************
 
     const listaDeTurnos: any[] = [];
     const currentDate = new Date();
@@ -351,7 +346,7 @@ export class MiPerfilComponent {
     }
 
     this.firestoreService.updateUser(this.user);
-    this.showTurnsOne();
+    // this.showTurnsOne();
     this.notificationService.crearSwal('Horarios actualizados', 'Mi Perfil', 'success');
   }
 
@@ -372,103 +367,74 @@ export class MiPerfilComponent {
       this.especialidad2 = true;
       this.turnDuration = this.user.especialidad[1].duracionTurno;
       this.deactivateDayButton();
-      this.specialistDays = [...this.user.especialidad[1].diasTurnos];
-      this.activateDayButton();
-    }
-  }
-
-  showTurns(index: number) {
-    if (index >= 0 && index < this.user.especialidad.length) {
-      this.turnDuration = this.user.especialidad[index].duracionTurno;
-      this.deactivateDayButton();
-      this.specialistDays = this.user.especialidad[index].diasTurnos || [];
+      this.specialistDays = [...this.user?.especialidad[1].diasTurnos];
       this.activateDayButton();
     }
   }
 
 
-    verHistorialClinico() {
+  verHistorialClinico() {
+    this.historialClinicoFiltrado = [...this.historialClinico];
+  }
+
+  isEspecialidadSelected(especialidad: string): boolean {
+    return this.especialidadSeleccionada === especialidad;
+  }
+
+  filtrarHistorialClinico(especialidad: string) {
+    this.especialidadSeleccionada = especialidad;
+    this.historialClinicoFiltrado = [];
+    if (especialidad == 'todo') {
+      this.btnTodo=true;
       this.historialClinicoFiltrado = [...this.historialClinico];
-    }
-
-    filtrarHistorialClinico(especialidad: string) {
-      switch (especialidad) {
-        case 'todo':
-          this.btnTodo = true;
-          this.btnCardiologia = false;
-          this.btnOdontologia = false;
-          this.btnEndocrinologia = false;
-          break;
-        case 'cardiologia':
-          this.btnTodo = false;
-          this.btnCardiologia = true;
-          this.btnOdontologia = false;
-          this.btnEndocrinologia = false;
-          break;
-        case 'odontologia':
-          this.btnTodo = false;
-          this.btnCardiologia = false;
-          this.btnOdontologia = true;
-          this.btnEndocrinologia = false;
-          break;
-        case 'endocrinologia':
-          this.btnTodo = false;
-          this.btnCardiologia = false;
-          this.btnOdontologia = false;
-          this.btnEndocrinologia = true;
-          break;
-      }
-
-      this.historialClinicoFiltrado = [];
-      if (especialidad == 'todo') {
-        this.historialClinicoFiltrado = [...this.historialClinico];
-      } else {
-        for (let i = 0; i < this.historialClinico.length; i++) {
-          const historial = this.historialClinico[i];
-          if (historial.especialidad == especialidad) {
-            this.historialClinicoFiltrado.push(historial);
-          }
+    } else {
+      this.btnTodo=false;
+      for (let i = 0; i < this.historialClinico.length; i++) {
+        const historial = this.historialClinico[i];
+        if (historial.especialidad == especialidad) {
+          this.historialClinicoFiltrado.push(historial);
         }
       }
-
-      if (this.historialClinicoFiltrado.length == 0) {
-        this.hayHistorialFiltrado = false;
-      } else {
-        this.hayHistorialFiltrado = true;
-      }
     }
 
-    crearPDF() {
-      const DATA = document.getElementById('pdf');
-      const doc = new jsPDF('p', 'pt', 'a4');
-      const options = {
-        background: 'white',
-        scale: 2,
-      };
-      //@ts-ignore
-      html2canvas(DATA, options)
-        .then((canvas: any) => {
-          const img = canvas.toDataURL('image/PNG');
-
-          const bufferX = 30;
-          const bufferY = 30;
-          const imgProps = (doc as any).getImageProperties(img);
-          const pdfWidth = doc.internal.pageSize.getWidth() - 2 * bufferX;
-          const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-          doc.addImage(
-            img,
-            'PNG',
-            bufferX,
-            bufferY,
-            pdfWidth,
-            pdfHeight,
-            undefined,
-            'FAST'
-          );
-          return doc;
-        })
-        .then((docResult: any) => {
-          docResult.save(`historial_clinico.pdf`);
-        });
+    if (this.historialClinicoFiltrado.length == 0) {
+      this.hayHistorialFiltrado = false;
+    } else {
+      this.hayHistorialFiltrado = true;
     }
   }
+
+  crearPDF() {
+    const DATA = document.getElementById('pdf');
+    const doc = new jsPDF('p', 'pt', 'a4');
+    const options = {
+      background: 'white',
+      scale: 2,
+    };
+    //@ts-ignore
+    html2canvas(DATA, options)
+      .then((canvas: any) => {
+        const img = canvas.toDataURL('image/PNG');
+
+        const bufferX = 30;
+        const bufferY = 30;
+        const imgProps = (doc as any).getImageProperties(img);
+        const pdfWidth = doc.internal.pageSize.getWidth() - 2 * bufferX;
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        doc.addImage(
+          img,
+          'PNG',
+          bufferX,
+          bufferY,
+          pdfWidth,
+          pdfHeight,
+          undefined,
+          'FAST'
+        );
+        return doc;
+      })
+      .then((docResult: any) => {
+        docResult.save(`historialClinico-${this.user.apellido}.${this.user.nombre}.pdf`);
+      });
+  }
+}

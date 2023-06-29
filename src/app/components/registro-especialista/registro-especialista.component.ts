@@ -37,6 +37,9 @@ export class RegistroEspecialistaComponent implements OnChanges {
   passValido: boolean = false;
   correoValido: boolean = false;
   passValidoConf: boolean = false;
+  captchaValido:boolean=false;
+  captchaEscrito:string="";
+  captcha: string = '';
 
 
   constructor(private formBuilder: FormBuilder,
@@ -46,6 +49,7 @@ export class RegistroEspecialistaComponent implements OnChanges {
     private authService: AuthService,
     private router: Router) {
       this.images = [];
+      this.captcha = this.generateRandomString(6);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -192,7 +196,6 @@ export class RegistroEspecialistaComponent implements OnChanges {
 
   //LOGIN
   loguear() {
-    console.log(this.usuario);
     if (this.usuario.hasOwnProperty("habilitado")) {
       if (this.formLogin.value.hb == true) {
         this.authService.login(this.formLogin.value.mail, this.formLogin.value.pw, this.formLogin.value.ft[0], this.formLogin.value.nom, false);
@@ -201,7 +204,11 @@ export class RegistroEspecialistaComponent implements OnChanges {
         this.swalService.crearSwal("Su cuenta no ha sido verificada por el Admin", "Error", "error");
       }
     }
-    else {
+    else if(this.usuario.hasOwnProperty("obraSocial")){
+      this.authService.login(this.formLogin.value.mail, this.formLogin.value.pw, this.formLogin.value.ft[0], this.formLogin.value.nom, false);
+    }
+    else
+    {
       this.authService.login(this.formLogin.value.mail, this.formLogin.value.pw, this.formLogin.value.ft[0], this.formLogin.value.nom, true);
     }
   }
@@ -276,6 +283,26 @@ export class RegistroEspecialistaComponent implements OnChanges {
     this.router.navigate(['/ingresar']);
   }
 
-
-}//Final
+  generateRandomString(num: number) {
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result1 = '';
+    const charactersLength = characters.length;
+    for (let i = 0; i < num; i++) {
+      result1 += characters.charAt(
+        Math.floor(Math.random() * charactersLength)
+      );
+    }
+    return result1;
+  }
+  
+  
+  validarCaptcha() {
+    if (this.captchaEscrito == this.captcha) {
+      this.captchaValido = true;
+    } else {
+      this.captchaValido = false;
+    }
+  }
+}
 

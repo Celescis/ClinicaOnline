@@ -1,10 +1,14 @@
 <nav class="navbar navbar-expand-lg " style="background-color: #236f2d; ">
 
-  <div *ngIf="authService.esAdmin" class="collapse navbar-collapse" id="navbarNav">
+  <div  class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
+      <li *ngIf="authService.esAdmin" class="nav-item">
         <i class="fa fa-users" aria-hidden="true" style="color: rgba(255, 255, 255, 0.519);"></i>
-        <a class="nav-link" routerLink="/adm-usuarios" style="font-size: 18px;padding: 0;">Usuarios</a>
+        <a class="nav-link" routerLink="/admin/adm-usuarios" style="font-size: 18px;padding: 0;"> Sección Usuarios</a>
+      </li>
+      <li *ngIf="authService.esEspecialista" class="nav-item">
+        <i class="fa fa-users" aria-hidden="true" style="color: rgba(255, 255, 255, 0.519);"></i>
+        <a class="nav-link" routerLink="/adm-pacientes" style="font-size: 18px;padding: 0;"> Sección Pacientes</a>
       </li>
     </ul>
   </div>
@@ -27,7 +31,7 @@
 <!--NAVBAR SIDE-->
 <div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed':''">
   <div class="logo-container">
-    <button class="logo" (click)="toggleCollapse()"> <img src="favicon.ico" style="height: 50px;width: 50px;"></button>
+    <button class="logo" (click)="toggleCollapse()"> <img src="assets/favicon.png" style="height: 50px;width: 50px;"></button>
     <div class="logo-text" *ngIf="collapsed">Clínica Online</div>
     <button class="btn-close" *ngIf="collapsed" (click)="closeSidenav()"><i
         class="fal fa-times close-icon"></i></button>
@@ -39,22 +43,38 @@
         <span class="sidenav-link-text" *ngIf="collapsed">{{data.label}}</span>
       </a>
     </li>
+    <li class="sidenav-nav-item" *ngIf="!authService.sePudo">
+      <a href="" class="sidenav-nav-link" [routerLink]="'/ingresar'">
+        <i class="sidenav-link-icon" [class]="'fa fa-user-circle'"></i>
+        <span class="sidenav-link-text" *ngIf="collapsed">{{ 'Ingresar' }}</span>
+      </a>
+    </li>
     <li class="sidenav-nav-item" *ngIf="authService.sePudo">
-      <a href="" class="sidenav-nav-link" [routerLink]="'miPerfil'">
+      <a href="" class="sidenav-nav-link" [routerLink]="'/miPerfil'">
         <i class="sidenav-link-icon" [class]="'fa fa-id-card'"></i>
         <span class="sidenav-link-text" *ngIf="collapsed">{{ 'Mi Perfil' }}</span>
       </a>
     </li>
     <li class="sidenav-nav-item" *ngIf="(authService.esPaciente || authService.esEspecialista)">
-      <a href="" class="sidenav-nav-link" [routerLink]="'misTurnos'">
+      <a href="" class="sidenav-nav-link" [routerLink]="'/misTurnos'">
         <i class="sidenav-link-icon" [class]="'fa fa-calendar-check'"></i>
         <span class="sidenav-link-text" *ngIf="collapsed">{{ 'Mis Turnos' }}</span>
       </a>
     </li>
     <li class="sidenav-nav-item" *ngIf="(authService.esPaciente || authService.esAdmin)">
-      <a href="" class="sidenav-nav-link" [routerLink]="'solicitar-turno'">
+      <a href="" class="sidenav-nav-link" [routerLink]="'/solicitar-turno'">
         <i class="sidenav-link-icon" [class]="'fa fa-calendar-plus'"></i>
         <span class="sidenav-link-text" *ngIf="collapsed">{{ 'Solicitar Turno' }}</span>
+      </a>
+    </li>
+    <li class="sidenav-nav-item" *ngIf="authService.esAdmin">
+      <a href="" class="sidenav-nav-link" [routerLink]="'/admin/turnos'">
+        <i class="sidenav-link-icon" [class]="'fa fa-calendar'"></i>
+        <span class="sidenav-link-text" *ngIf="collapsed">{{ 'Turnos' }}</span>
+      </a>
+      <a href="" class="sidenav-nav-link" [routerLink]="'/admin/informes'">
+        <i class="sidenav-link-icon" [class]="'fa fa-info-circle'"></i>
+        <span class="sidenav-link-text" *ngIf="collapsed">{{ 'Informes' }}</span>
       </a>
     </li>
   </ul>

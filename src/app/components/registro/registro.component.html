@@ -93,7 +93,7 @@
                 <div class="d-flex flex-wrap">
                     <div class="flex-column" style="flex: 1;">
                         <input (input)="validarCorreo()"
-                            [ngClass]="{'is-invalid': !correoValido, 'is-valid': correoValido}" style="width: 80%;"
+                            [ngClass]="{'is-invalid': !correoValido, 'is-valid': correoValido}" style="width: 80%;height: 40%;"
                             type="email" name="email" placeholder="Mail" required class="form-control text-success"
                             formControlName="mail">
                         <small class="invalid-feedback" style="color: rgb(226, 53, 53); margin-left: 20%; top:0;"
@@ -104,7 +104,7 @@
 
                     <div class="flex-column" style="flex: 1;">
                         <input (input)="validarPass()" [ngClass]="{'is-invalid': !passValido, 'is-valid': passValido}"
-                            style="width: 80%;" type="password" name="pswd" placeholder="Clave" required
+                        style="width: 80%;height: 40%;" type="password" name="pswd" placeholder="Clave" required
                             class="form-control text-success" formControlName="pw">
                         <small class="invalid-feedback" style="color: rgb(226, 53, 53); margin-left: 20%; top:0;"
                             *ngIf="form.controls['pw'].value?.length > 0">
@@ -112,6 +112,24 @@
                         </small>
                     </div>
                 </div>
+                <div class="d-flex flex-wrap">
+                    <div class="flex-column" style="flex: 1;">
+                        <input [ngModelOptions]="{standalone: true}" type="text" class="form-control"
+                            [(ngModel)]="captchaEscrito" (input)="validarCaptcha()"
+                            [ngClass]="{'is-invalid': !captchaValido, 'is-valid': captchaValido}"
+                            placeholder="CAPTCHA" style="width: 80%;height: 40%;"/>
+                        <small class="invalid-feedback" style="color: rgb(226, 53, 53); margin-left: 20%; top:0;"
+                            *ngIf="captchaEscrito.length > 0">
+                            Captcha Inválido
+                        </small>
+                    </div>
+                    <div class="flex-column" style="flex: 1;">
+                        <p class="captcha" style="width: 40%;height: 40%; margin-top: 4.5%;">
+                            {{ captcha }}
+                        </p>
+                    </div>
+                </div>
+
 
                 <!-- Input para seleccionar las imágenes -->
                 <label for="file" style="font-size:20px; margin-bottom: -2%;">INGRESE 2 IMAGENES</label>

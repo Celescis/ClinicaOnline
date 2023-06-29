@@ -81,7 +81,6 @@ export class SolicitarTurnoComponent {
   showSpeciality(esp: any) {
     this.specialistSelectionMenu = false;
     this.activeEspecialista = esp;
-    console.log(esp);
   }
 
   showPatient(paciente: any) {
@@ -125,26 +124,31 @@ export class SolicitarTurnoComponent {
     const listaTurnosDelEspecialista = this.currentSpecialistTurnList.filter(
       (t) => t.especialista.mail == this.activeEspecialista.mail
     );
-    const turnosEspecialidad =
-      listaTurnosDelEspecialista[0].turnos.filter((t: any) => {
+    if (listaTurnosDelEspecialista.length > 0) {
+      const turnosEspecialidad = listaTurnosDelEspecialista[0]?.turnos?.filter((t: any) => {
         return (
           t.especialidad == this.speciality.nombre &&
           currentDate.getTime() < new Date(t.fecha.seconds * 1000).getTime()
         );
       });
-    const turnos15dias: any[] = [];
-    for (let i = 0; i < turnosEspecialidad.length; i++) {
-      const turno = { ...turnosEspecialidad[i] };
-      if (
-        new Date(turno.fecha.seconds * 1000).getTime() <=
-        currentDate.getTime() + 84600000 * 15 &&
-        turno.estado == 'disponible'
-      ) {
-        turno.fecha = new Date(turno.fecha.seconds * 1000);
-        turnos15dias.push(turno);
+      const turnos15dias: any[] = [];
+      for (let i = 0; i < turnosEspecialidad.length; i++) {
+        const turno = { ...turnosEspecialidad[i] };
+        if (
+          new Date(turno.fecha.seconds * 1000).getTime() <=
+          currentDate.getTime() + 84600000 * 15 &&
+          turno.estado == 'disponible'
+        ) {
+          turno.fecha = new Date(turno.fecha.seconds * 1000);
+          turnos15dias.push(turno);
+        }
       }
+      this.turnosAMostrar = [...turnos15dias];
     }
-    this.turnosAMostrar = [...turnos15dias];
+    else
+    {
+      this.notificationService.crearSwal("No hay turnos de esta especialidad","No hay datos","info");
+    }
   }
 
   loadFreeHoursOneDay(date: Date) {
@@ -224,6 +228,13 @@ export class SolicitarTurnoComponent {
     this.router.navigate(['/solicitar-turno']);
     this.specialistSelectionMenu = true;
     this.activeEspecialista = false;
-    this.turnsSelectionMenu=false;
+    this.turnsSelectionMenu = false;
+  }
+  volverMenuPrincipal2() {
+    this.router.navigate(['/solicitar-turno']);
+    this.patientSelectionMenu = true;
+    this.specialistSelectionMenu = true;
+    this.activeEspecialista = false;
+    this.turnsSelectionMenu = false;
   }
 }

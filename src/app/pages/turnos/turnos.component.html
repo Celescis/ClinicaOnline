@@ -1,0 +1,78 @@
+<body>
+    <div *ngIf="spinner" class="spinner-container">
+        <span class="loader"></span>
+    </div>
+
+    <div class="main">
+        <div class="turnos">
+            <h3>GESTIÓN DE TURNOS</h3>
+            <label style="
+          margin-top: 1rem;
+          margin-bottom: 1rem;
+          margin-right: 1rem;
+          font-size: 1.5rem;
+        ">Buscar</label>
+            <input class="input-busqueda" type="text" [(ngModel)]="palabraBusqueda"
+                (keyup)="filtrarPorCamposAdministrador()" placeholder="Ingresar busqueda..." />
+
+            <!-- LISTA GENERAL DE TURNOS -->
+            <div class="tabla-usuario text-focus-in">
+                <table class="table" style="height: 10%; overflow-y: scroll;">
+                    <thead>
+                        <tr>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Especialista</th>
+                            <th scope="col">Especialidad</th>
+                            <th scope="col">Paciente</th>
+                            <th scope="col">Obra Social</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="tr-tabla" style="cursor: pointer" *ngFor="let turn of turnosFiltrados">
+                            <td>{{ (turn.fecha.seconds * 1000) | date: 'dd/MM/yyyy HH:mm' }}</td>
+                            <td>
+                                {{ turn.especialista.apellido }} {{ turn.especialista.nombre }}
+                            </td>
+                            <td>{{ turn.especialidad }}</td>
+                            <td>{{ turn.paciente.apellido }} {{ turn.paciente.nombre }}</td>
+                            <td>{{ turn.paciente.obraSocial }}</td>
+                            <td>
+                                <span class="btn btn-success estado" disabled
+                                    style="margin-left: 1rem; box-shadow: 2px 2px 4px #000">{{ turn.estado }}</span>
+                            </td>
+
+                            <td>
+                                <button class="btn btn-secondary btn-cancelar" style="box-shadow: 2px 2px 4px #000"
+                                    (click)="cancelarTurno(turn)" *ngIf="
+                    turn.estado != 'aceptado' &&
+                    turn.estado != 'realizado' &&
+                    turn.estado != 'rechazado' &&
+                    turn.estado != 'cancelado'
+                  ">
+                                    Cancelar
+                                </button>
+                                <button class="btn btn-success btn-confirmar"
+                                    style="margin-left: 1rem; box-shadow: 2px 2px 4px #000"
+                                    (click)="confirmarCancelacion(turn)" *ngIf="
+                    cancelacionTurno &&
+                    turnoACancelar.fecha.seconds == turn.fecha.seconds
+                  ">
+                                    Confirmar
+                                </button>
+                                <br />
+                                <input type="text" class="form-control" style="margin-top: 0.5rem"
+                                    placeholder="Comentario de cancelación..." [(ngModel)]="comentarioCancelacion"
+                                    *ngIf="
+                    cancelacionTurno &&
+                    turnoACancelar.fecha.seconds == turn.fecha.seconds
+                  " />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>

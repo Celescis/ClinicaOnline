@@ -173,7 +173,9 @@ button:hover {
     justify-content: center;
     align-items: center;
     z-index: 100000000000;
+    background-color: #00000073;
   }
+  
   .loader {
     position: relative;
     width: 100px;
@@ -182,7 +184,8 @@ button:hover {
     border-radius: 4px;
     z-index: 1000;
   }
-  .loader:before{
+  
+  .loader:before {
     content: '';
     position: absolute;
     width: 54px;
@@ -190,15 +193,16 @@ button:hover {
     left: 50%;
     top: 0;
     background-image:
-    radial-gradient(ellipse at center, #0000 24%,#de3500 25%,#de3500 64%,#0000 65%),
-    linear-gradient(to bottom, #0000 34%,#de3500 35%);
-    background-size: 12px 12px , 100% auto;
+      radial-gradient(ellipse at center, #0000 24%, #de3500 25%, #de3500 64%, #0000 65%),
+      linear-gradient(to bottom, #0000 34%, #de3500 35%);
+    background-size: 12px 12px, 100% auto;
     background-repeat: no-repeat;
     background-position: center top;
-    transform: translate(-50% , -65%);
+    transform: translate(-50%, -65%);
     box-shadow: 0 -3px rgba(0, 0, 0, 0.25) inset;
   }
-  .loader:after{
+  
+  .loader:after {
     content: '';
     position: absolute;
     left: 50%;
@@ -211,18 +215,20 @@ button:hover {
     animation: writeDown 2s ease-out infinite;
   }
   
+  
   @keyframes writeDown {
     0% { height: 0%; opacity: 0;}
     20%{ height: 0%; opacity: 1;}
     80% { height: 65%; opacity: 1;}
     100% { height: 65%; opacity: 0;}
   }
+
   .btn-menu-volver {
     font-family: 'Raleway', sans-serif;
     width: 10rem;
     position: absolute;
-    left: 6%;
-    top: 3%;
+    left: 10%;
+    top: 4%;
     height: 3rem;
     border: groove 3px;
     background-color: #0e553f;
@@ -236,3 +242,15 @@ button:hover {
     color: black;
     font-weight: 200;
 }
+
+.captcha {
+    font-size: 1.2rem;
+    text-align: center;
+    color: black;
+    background: #fff;
+    border-radius: 10px;
+    text-transform: uppercase;
+    font-weight: bolder;
+    /* text-shadow: 1px 1px 1px #fff; */
+  }
+  

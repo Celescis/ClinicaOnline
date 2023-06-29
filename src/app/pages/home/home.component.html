@@ -10,7 +10,8 @@
             </p>
         </div>
         <div>
-            <button class="boton" (click)="irIngresar()">INGRESAR</button>
+            <button class="boton" [routerLink]="'/ingresar'" *ngIf="!authService.sePudo">INGRESAR</button>
+            <button class="boton" [routerLink]="'/miPerfil'" *ngIf="authService.sePudo">MI PERFIL</button>
         </div>
         <p style="background-color: rgba(50, 171, 131, 0.277);box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.317);">
             <strong>Abierto de <br> lunes a viernes de 8:00 am a 19:00 pm <br> y los sábados de 8:00 am a 14:00

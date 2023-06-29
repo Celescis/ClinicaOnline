@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { FirestoreService } from 'src/app/services/firestore.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -9,13 +9,10 @@ import { FirestoreService } from 'src/app/services/firestore.service';
 })
 export class HomeComponent {
 
-  constructor(private router: Router) {
+  constructor(
+    public authService: AuthService) {
 
   }
 
-
-  irIngresar() {
-    this.router.navigate(['/ingresar']);
-  }
 
 }

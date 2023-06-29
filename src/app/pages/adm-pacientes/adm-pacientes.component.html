@@ -1,0 +1,107 @@
+<div *ngIf="spinner" class="spinner-container">
+  <span class="loader"></span>
+</div>
+<div class="main">
+  <h3>PACIENTES ATENDIDOS POR: <b style="color: rgb(225, 255, 225);">{{user?.apellido}}, {{user?.nombre}}</b><br>
+    <span style="font-size: 23px;">ESPECIALIDADES: <b
+        style="color: rgb(225, 255, 225);">{{especialidadesDelEspecialista}}</b></span>
+  </h3>
+  <div *ngIf="hayPacientesAtendidos">
+    <div class="card-container" style="display: flex; align-items: center;justify-content: center;">
+      <div (click)="verHistorialPaciente(pac)" class="card" data-bs-toggle="modal" data-bs-target="#exampleModal"
+        *ngFor="let pac of pacientesAtendidos">
+        <div class="card-content">
+          <img class="img-perfil" src="{{ pac.fotos[0] }}" alt="imagen" />
+          <span style="text-transform: upperCase; font-weight: bolder">{{ pac.apellido }}, {{ pac.nombre }}</span>
+          <div class="card-button">
+            <small>Historial de los 3 ultimos turnos del paciente:</small>
+          </div>
+          <hr style="color: white;">
+          <div *ngFor="let historial of historialClinicoDelEspecialista">
+            <div *ngIf="
+                pac.uid == historial.paciente.uid &&
+                user.uid == historial.especialista.uid
+                " class="detalle-atencion">
+              <small *ngIf="historial.paciente.contador <= 3">
+                <span>Fecha del turno:</span>
+                {{ (historial?.fecha.seconds * 1000) | date: 'dd/MM/yyyy HH:mm' }}<br>
+                <span>Hora del turno:</span>
+                {{ (historial?.fecha.seconds * 1000) | date: 'HH:mm' }}<br>
+                <span>Especialidad:</span>
+                {{ historial.especialidad }}
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!hayPacientesAtendidos">
+    <h4 style="font-size: 3rem; text-align: center">
+      No se atendieron pacientes...
+    </h4>
+  </div>
+</div>
+
+
+<div class="modal fade modal-xl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header" style="display: flex; justify-content: space-between;">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h1 style="text-align: center; font-size: 2rem">
+          HISTORIAL CLÍNICO DE
+          <span style="text-transform: uppercase; font-weight: bolder">{{
+            pacienteDelQueSeVeraElHistorial?.apellido }} {{
+              pacienteDelQueSeVeraElHistorial?.nombre
+            }}</span>
+        </h1>
+        <div *ngFor="let historial of historialActivo" class="carta-historial">
+          <br>
+          <h3 style="color: black;">
+              INFORME DE
+              <span style="text-transform: uppercase">{{
+                  historial?.especialidad
+                  }}: </span>
+              <b>{{ (historial?.fecha.seconds * 1000) | date: 'dd/MM/yyyy HH:mm' }}</b>
+              <br>
+              <br>
+              ESPECIALISTA:
+              <span style="text-transform: uppercase; font-weight: bolder">{{ historial?.especialista?.apellido }},
+                  {{ historial?.especialista?.nombre }}</span>
+          </h3>
+          <hr />
+          <div style="background-color: #83bf9b; padding: 2%;">
+            <p><span>Detalle: </span></p>
+            <p>Altura: {{ historial?.detalle?.altura }}</p>
+            <p>Peso: {{ historial?.detalle?.peso }}</p>
+            <p>Temperatura: {{ historial?.detalle?.temperatura }}</p>
+            <p>Presión: {{ historial?.detalle?.presion }}</p>
+            <p
+              *ngIf="historial?.detalleAdicional?.clave3 || historial?.detalleAdicional?.clave2 || historial?.detalleAdicional?.clave1">
+              <span>Detalles adicionales: </span>
+            </p>
+            <p
+              *ngIf="!historial?.detalleAdicional?.clave3 && !historial?.detalleAdicional?.clave2 && !historial?.detalleAdicional?.clave1">
+              <span>No se agregaron detalles extras.</span>
+            </p>
+            <p *ngIf="historial?.detalleAdicional?.clave1">
+              {{ historial?.detalleAdicional?.clave1 }}:
+              {{ historial?.detalleAdicional?.valor1 }}
+            </p>
+            <p *ngIf="historial?.detalleAdicional?.clave2">
+              {{ historial?.detalleAdicional?.clave2 }}:
+              {{ historial?.detalleAdicional?.valor2 }}
+            </p>
+            <p *ngIf="historial?.detalleAdicional?.clave3">
+              {{ historial?.detalleAdicional?.clave3 }}:
+              {{ historial?.detalleAdicional?.valor3 }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

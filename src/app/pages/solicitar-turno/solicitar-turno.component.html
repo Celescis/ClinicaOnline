@@ -2,12 +2,15 @@
     <div *ngIf="spinner" class="spinner-container">
         <span class="loader"></span>
     </div>
-    <button class="btn-menu-volver" (click)="volverMenuPrincipal()">Volver al menú</button>
+    <button *ngIf="authService.esPaciente" class="btn-menu-volver" (click)="volverMenuPrincipal()">Volver al
+        menú</button>
+    <button *ngIf="authService.esAdmin" class="btn-menu-volver" (click)="volverMenuPrincipal2()">Volver al menú</button>
     <div class="main">
         <div class="contenedor-especialistas" *ngIf="patientSelectionMenu">
             <h3>PACIENTES</h3>
             <div class="row" style="overflow-x: scroll">
                 <div class="col carta-especialista" *ngFor="let pac of pacientesList" (click)="showPatient(pac)">
+                    <p>{{ pac.apellido }}, {{ pac.nombre }}</p>
                     <img class="carta-especialista" style="
                     border-radius: 50%;
                     width: 10rem;
@@ -15,29 +18,26 @@
                     display: flex;
                     justify-content: center;
                   " src="{{ pac.fotos[0] }}" alt="imagen" />
-                    <p>{{ pac.nombre }} - {{ pac.apellido }}</p>
                 </div>
             </div>
         </div>
 
         <div class="contenedor-especialistas" *ngIf="specialistSelectionMenu && !patientSelectionMenu">
             <h3>ESPECIALISTAS</h3>
-            <div class="contenerdor-carta-esp" style="display: flex; justify-content: center">
+            <div class="contenedor-carta-esp" style="display: flex; justify-content: center; flex-wrap: wrap;">
                 <div *ngFor="let esp of especialistasList" (click)="showSpeciality(esp)">
-                    <div>
-                        <img class="carta-especialista" style="
-                  border-radius: 50%;
-                  width: 10rem;
-                  height: 10rem;
-                  display: flex;
-                  justify-content: center;
-                " src="{{ esp.fotos[0] }}" alt="imagen" />
-                        <p style="text-align: center; font-weight: bolder">
-                            {{ esp.apellido }}, {{ esp.nombre }}
-                        </p>
+                    <div style="width: 20rem;height: 20rem;">
+                        <p
+                            style="text-align: center; font-weight: bolder; height: 5rem;">
+                            {{ esp.apellido }}, {{ esp.nombre }}</p>
+                        <img class="carta-especialista"
+                            style="border-radius: 50%; width: 10rem; height: 10rem; object-fit: cover;"
+                            src="{{ esp.fotos[0] }}" alt="imagen" />
                     </div>
                 </div>
             </div>
+
+
         </div>
 
         <div class="contenedor-especialistas" *ngIf="activeEspecialista && !turnsSelectionMenu">
@@ -74,11 +74,8 @@
                 <div class="col turnos-desk">
                     <button class="btn btn-success" style="
                 text-transform: uppercase;
-                margin-left: 0.5rem;
-                margin-right: 0.5rem;
-                margin-bottom: 0.5rem;
-              " *ngFor="let dia of diasAMostrar" (click)="loadFreeHoursOneDay(dia)">
-                        {{ dia | date: 'd/M/yy'}}
+                margin-left: 2px;" *ngFor="let dia of diasAMostrar" (click)="loadFreeHoursOneDay(dia)">
+                        {{ dia | date: 'yy/M/d'}}
                     </button>
                     <br />
                     <p *ngIf="diasAMostrar.length == 0" style="text-align: center">
@@ -105,11 +102,8 @@
                 <div class="col">
                     <button class="btn btn-success btn-dia" style="
                 text-transform: uppercase;
-                margin-left: 0.5rem;
-                margin-right: 0.5rem;
-                margin-bottom: 0.5rem;
               " *ngFor="let dia of diasAMostrar" (click)="loadFreeHoursOneDay(dia)">
-                        {{ dia | date: 'M/d/yy'}}
+                        {{ dia | date: 'yy/M/d'}}
                     </button>
                     <br />
                     <p *ngIf="diasAMostrar.length == 0" style="text-align: center">
