@@ -2,7 +2,7 @@
 
 ### Vista del inicio y barra de navegación principal:
 ![](Fotos/Home.png)
-![](Fotos/NavBar.png)
+![](Fotos/NavBar%20.png)
 
 # INGRESO A LA PÁGINA
 
