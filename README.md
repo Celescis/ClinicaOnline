@@ -1,27 +1,96 @@
-# TP 2 Clinica Online - CELESTE CISTERNAS
+# TP 2 Clínica Online - CELESTE CISTERNAS
 
+### Vista del inicio y barra de navegación principal:
 ![](Fotos/Home.png)
+![](Fotos/NavBar.png)
 
-## Development server
+# INGRESO A LA PÁGINA
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+![](Fotos/Ingreso.png)
+### Se selecciona que usuario ingresara para iniciar sesión:
+![](Fotos/Login.png)
 
-## Code scaffolding
+### Si el usuario no se encuentra en la base de datos se podrá registrar como paciente o especialista:
+![](Fotos/Registro%20paciente.png)
+![](Fotos/Registro%20especialista.png)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+# RECORRIDO DEL PACIENTE
 
-## Build
+![](Fotos/Home%20paciente.png)
+### Al ingresar como paciente se verá la página de bienvenida con los atajos para las siguientes:
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Mi Perfil Paciente
+![](Fotos/Mi%20perfil%20paciente.png)
+![](Fotos/Historia%20clinica%20paciente.png)
+### Los pacientes podrán ver sus datos personales e incluso los historiales clínicos que le suban sus especialistas.
 
-## Running unit tests
+## Mis Turnos Paciente
+![](Fotos/Mis%20turnos%20paciente.png)
+### Los pacientes podrán ver su historial de turnos y cancelarlos.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Solicitar Turnos Paciente
+![](Fotos/Solicitar%20turno%20paciente.png)
+### Los pacientes podrán solicitar turno eligiendo su especialista y luego su especialidad:
+![](Fotos/Especialidades%20solicitar%20paciente.png)
+![](Fotos/Turnos%20paciente.png)
 
-## Running end-to-end tests
+# RECORRIDO DEL ESPECIALISTA
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+![](Fotos/Home%20especialista.png)
+### Al ingresar como especialista se verá la página de bienvenida con los atajos para las siguientes:
 
-## Further help
+## Mi Perfil Especialista
+![](Fotos/Mi%20perfil%20especialista.png)
+### Los especialistas podrán ver sus datos personales y generar sus horarios dependendiendo de su especialidad.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Mis Turnos Especialista
+![](Fotos/Mis%20turnos%20especialista.png)
+### Los especialistas podrán ver su historial de turnos, rechazar, cancelar y aceptar el turno y una vez finalizado cargar el historial clínico del paciente atendido.
+
+## Sección Pacientes Especialista
+![](Fotos/Seccion%20pacientes%20especialista.png)
+### Los especialistas podrán ver a todos sus pacientes y al hacer click en su información se abrirá una ventana con los datos de las últimas 3 consultas.
+
+# RECORRIDO DEL ADMINISTRADOR
+
+![](Fotos/Home%20administrador.png)
+### Al ingresar como administrador se verá la página de bienvenida con los atajos para las siguientes:
+
+## Mi Perfil Administrador
+![](Fotos/Mi%20perfil%20administrador.png)
+### Los administradores podrán ver sus datos personales.
+
+## Solicitar Turnos Administrador
+![](Fotos/Solicitar%20turno%20administrador.png)
+### Los administradores podrán solicitar turnos para los pacientes y eligir sus especialista y especialidades al igual que los pacientes.
+
+## Gestión Turnos Administrador
+![](Fotos/Gestion%20turnos%20administrador.png)
+### Los administradores podrán ver el historial de turnos de todos los pacientes y cancelarlos.
+
+## Sección Usuarios Administrador
+![](Fotos/Seccion%20usuarios%20administrador.png)
+### Los administradores podrán ver a todos los usuarios, en el caso de los pacientes podrán ver sus historiales clínicos y descargarlos en formato EXCEL y a los especialistas se les podrá habilitar o deshabilitar el ingreso al sistema. Además los administradores pueden registrar pacientes, especialistas y a otros administradores:
+![](Fotos/Registro%20usuarios%20administrador.png)
+
+## Informes Administrador
+### En esta sección se proporcionarán gráficos y estadísticas sobre los turnos.
+
+![](Fotos/Informes%20administrador.png)
+
+Todos los informes tendrán la opción de ser descargados en formato PDF o Excel y son los siguientes:
+
+- Log de ingresos al sistema. Indicando el usuario, día y horario en que ingresó al sistema:
+![](Fotos/Informes%20logs%20administrador.png)
+
+- Cantidad de turnos por especialidad:
+![](Fotos/Turnos%20por%20especialidad%20administrador.png)
+
+- Cantidad de turnos por día:
+![](Fotos/Turnos%20por%20dia%20administrador.png)
+
+- Cantidad de turnos solicitados por médico en un lapso de tiempo:
+![](Fotos/Turnos%20solicitados%20por%20medico%20administrador.png)
+
+- Cantidad de turnos finalizados por médico en un lapso de tiempo:
+![](Fotos/Turnos%20finalizados%20por%20medico%20administrador.png)
