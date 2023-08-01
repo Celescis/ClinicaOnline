@@ -4,7 +4,7 @@
 ![](Fotos/Home.png)
 ![](Fotos/NavBar%20.png)
 
-# >INGRESO A LA PÁGINA
+# > INGRESO A LA PÁGINA
 
 ![](Fotos/Ingreso.png)
 ### Se selecciona que usuario ingresara para iniciar sesión:
@@ -14,7 +14,7 @@
 ![](Fotos/Registro%20paciente.png)
 ![](Fotos/Registro%20especialista.png)
 
-# >RECORRIDO DEL PACIENTE
+# > RECORRIDO DEL PACIENTE
 
 ![](Fotos/Home%20paciente.png)
 ### Al ingresar como paciente se verá la página de bienvenida con los atajos para las siguientes:
@@ -34,7 +34,7 @@
 ![](Fotos/Especialidades%20solicitar%20paciente.png)
 ![](Fotos/Turnos%20paciente.png)
 
-# >RECORRIDO DEL ESPECIALISTA
+# > RECORRIDO DEL ESPECIALISTA
 
 ![](Fotos/Home%20especialista.png)
 ### Al ingresar como especialista se verá la página de bienvenida con los atajos para las siguientes:
@@ -51,7 +51,7 @@
 ![](Fotos/Seccion%20pacientes%20especialista.png)
 ### Los especialistas podrán ver a todos sus pacientes y al hacer click en su información se abrirá una ventana con los datos de las últimas 3 consultas.
 
-# >RECORRIDO DEL ADMINISTRADOR
+# > RECORRIDO DEL ADMINISTRADOR
 
 ![](Fotos/Home%20administrador.png)
 ### Al ingresar como administrador se verá la página de bienvenida con los atajos para las siguientes:
